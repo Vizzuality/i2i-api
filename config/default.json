@@ -1,0 +1,12 @@
+{
+     "logger": {
+        "name": "i2i-DEV",
+        "level": "debug",
+        "toFile": false,
+        "dirLogFile": null
+    },
+    "service": {
+        "name": "i2i",
+        "port": 3005
+    }
+}
