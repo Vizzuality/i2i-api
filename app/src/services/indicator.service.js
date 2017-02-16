@@ -5,9 +5,9 @@ const Pool = require('pg').Pool;
 const configDB = {
     host: process.env.POSTGRES_PORT_5432_TCP_ADDR,
     port: process.env.POSTGRES_PORT_5432_TCP_PORT,
-    user: process.env.I2I_POSTGRES_1_ENV_POSTGRES_USER,
-    password: process.env.I2I_POSTGRES_1_ENV_POSTGRES_PASSWORD,
-    database: process.env.I2I_POSTGRES_1_ENV_POSTGRES_DB
+    user: process.env.I2I_API_POSTGRES_ENV_POSTGRES_USER,
+    password: process.env.I2I_API_POSTGRES_ENV_POSTGRES_PASSWORD,
+    database: process.env.I2I_API_POSTGRES_ENV_POSTGRES_DB
 };
 
 class IndicatorService {
