@@ -1,8 +1,20 @@
 prod:
-  image: vizzuality/i2i:1.0.0
+  extends:
+    file: base.yml
+    service: base
   ports:
     - "4000:3000"
   env_file:
     - prod.env
   command: start
   restart: always
+links: 
+    - postgres
+postgres:
+  image: postgres:9.6
+  environment: 
+    POSTGRES_PASSWORD: root
+    POSTGRES_USER: root
+    POSTGRES_DB: i2i
+  volumes:
+    - ./database:/var/lib/postgresql/data
