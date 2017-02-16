@@ -1,5 +1,5 @@
 prod:
-  image: vizzuality/i2i:1.0.0${STAGING}
+  image: vizzuality/i2i:1.0.0
   ports:
     - "4000:3000"
   env_file:
