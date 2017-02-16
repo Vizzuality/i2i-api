@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "CT_URL=http://mymachine:9000 LOCAL_URL=http://mymachine:3005 NODE_PATH=app/src PORT=3005 node --harmony ./node_modules/.bin/grunt --gruntfile app/Gruntfile.js",
+    "dev": "NODE_PATH=app/src PORT=3000 node --harmony ./node_modules/.bin/grunt --gruntfile app/Gruntfile.js",
     "import-csv": "NODE_PATH=app/src node --harmony"
   },
   "keywords": [],
