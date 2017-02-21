@@ -8,5 +8,13 @@
     "service": {
         "name": "i2i",
         "port": 3000
+    },
+    "database": {
+        "force": false,
+        "user": null,
+        "password": null,
+        "database": null,
+        "host": null,
+        "port": null
     }
 }

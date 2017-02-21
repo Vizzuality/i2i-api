@@ -1,58 +1,84 @@
 const logger = require('logger');
-const Pool = require('pg').Pool;
+const AnswerModel = require('models').answer;
+const Country4YearModel = require('models').country4year;
+const CountryModel = require('models').country;
+const sequelize = require('models').sequelize;
 
-
-const configDB = {
-    host: process.env.POSTGRES_PORT_5432_TCP_ADDR,
-    port: process.env.POSTGRES_PORT_5432_TCP_PORT,
-    user: process.env.I2I_API_POSTGRES_ENV_POSTGRES_USER,
-    password: process.env.I2I_API_POSTGRES_ENV_POSTGRES_PASSWORD,
-    database: process.env.I2I_API_POSTGRES_ENV_POSTGRES_DB
-};
 
 class IndicatorService {
 
-    constructor() {
-        logger.info('Connecting to Postgres');
-        this.pool = new Pool(configDB);
+    async getIndicatorsByCountryAndYear(iso, year) {
+        const total = await IndicatorService.getTotal(iso, year);
+        const result = await AnswerModel.findAll({
+            raw: true,
+            attributes: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value', sequelize.fn('SUM', sequelize.col('weight'))],
+            where: {
+                year: parseInt(year, 10),
+                iso
+            },
+            group: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value'],
+            order: ['indicatorId']
+        });
+        return result.map((el) => {
+            el.percentage = (el.sum / total) * 100;
+            return el;
+        });
+    }
+    
+    static async getTotal(iso, year) {
+        const total = await Country4YearModel.findAll({
+            attributes: ['total'],
+            where: {
+                year
+            },
+            include: [{
+                model: CountryModel,
+                where: {
+                    iso
+                }
+            }]
+        });
+        if (total && total.length === 1) {
+            return total[0].total;
+        }
+        return null;
     }
 
-    async getIndicatorsByCountryAndYear(country, year, where) {
-        const result = await this.pool.query(`select 
-                indicator_id, 
-                child_indicator_id, 
-                answer_id, 
-                value, 
-                count(*)::int as count
-            from answer 
-            where 
-                year = ${year} and country = '${country}' 
-                ${where ? `AND row_id in (select row_id from answer where ${where})` : ''}
-            group by indicator_id, child_indicator_id, answer_id, value 
-            order by indicator_id`);
-        if (!result || !result.rows) {
-            return [];
+    async getIndicator(indicatorId, filters) {
+        const totals = {};
+        let where = {
+            indicatorId
+        };
+        logger.debug(filters);
+        if (filters && Object.keys(filters).length > 0) {
+            const tuples = [];
+            logger.debug('filters', filters);
+            for (let i = 0, length = filters.length; i < length; i++) {
+                const total = await IndicatorService.getTotal(filters[i].iso, filters[i].year);
+                tuples.push(Object.assign({}, filters[i]));
+                totals[`${filters[i].iso}-${filters[i].year}`] = total;
+            }
+            where = {
+                $and: [where, {
+                    $or: tuples
+                }]
+            };
         }
-        return result.rows;
-    }
+        logger.debug('totals', totals);
+        const result = await AnswerModel.findAll({
+            raw: true,
+            attributes: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value', sequelize.fn('SUM', sequelize.col('weight')), sequelize.fn('COUNT', sequelize.col('id'))],
+            where,
+            group: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value'],
+            order: ['indicatorId']
+        });
 
-    async getIndicator(indicatorId, where) {
-        const result = await this.pool.query(`select 
-                indicator_id, 
-                child_indicator_id, 
-                answer_id, 
-                value, 
-                count(*)::int as count
-            from answer 
-            where 
-                indicator_id = ${indicatorId} 
-                ${where ? `AND row_id in (select row_id from answer where ${where})` : ''}
-            group by indicator_id, child_indicator_id, answer_id, value 
-            order by indicator_id`);
-        if (!result || !result.rows) {
-            return [];
-        }
-        return result.rows;
+        return result.map((el) => {
+            if (totals[`${el.iso}-${el.year}`]){
+                el.percentage = (el.sum / totals[`${el.iso}-${el.year}`]) * 100;
+            }
+            return el;
+        });
     }
 
 }

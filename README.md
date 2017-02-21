@@ -1,6 +1,16 @@
 # i2i API
 
 ## Endpoints
+GET: /api/v1/country -> Return all countries and his last year registered
+POST: /api/v1/country -> Save a new country and year. If the country already exist, only create this year for this country
+```
+{
+	"name": "España",
+	"iso": "esp",
+	"year": 2017,
+	"total": 20000.2 // total of poblation
+}
+```
 
-GET: /api/v1/i2i/indicator/:indicatorId -> Return the statistics for the indicator in all polls
-GET: /api/v1/i2i/indicator/:country/:year -> Return the statistics for all indicators of the poll selected with country and year
+GET: /api/v1/indicator/:indicatorId?iso=year -> Return the statistics for the indicator for this country and year. You can filter by several countries and years
+GET: /api/v1/indicator/:country/:year -> Return the statistics for all indicators of the poll selected with country and year

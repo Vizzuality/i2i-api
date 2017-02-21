@@ -2,7 +2,7 @@ const Router = require('koa-router');
 const indicatorService = require('services/indicator.service');
 
 const router = new Router({
-    prefix: '/i2i',
+    prefix: '/indicator',
 });
 
 class HiRouter {
@@ -15,7 +15,16 @@ class HiRouter {
     }
 
     static async getIndicator(ctx) {
-        const result = await indicatorService.getIndicator(ctx.params.indicatorId, ctx.query.where);
+        const isos = Object.keys(ctx.query);
+        const filters = [];
+        for (let i = 0, length = isos.length; i < length; i++) {
+            filters.push({
+                iso: isos[i],
+                year: parseInt(ctx.query[isos[i]], 10)
+            });
+        }
+
+        const result = await indicatorService.getIndicator(ctx.params.indicatorId, filters);
         ctx.body = {
             data: result
         };
@@ -23,8 +32,8 @@ class HiRouter {
 
 }
 
-router.get('/indicator/:indicatorId', HiRouter.getIndicator);
-router.get('/indicator/:country/:year', HiRouter.getIndicatorsByCountryAndYear);
+router.get('/:indicatorId', HiRouter.getIndicator);
+router.get('/:country/:year', HiRouter.getIndicatorsByCountryAndYear);
 
 
 module.exports = router;
