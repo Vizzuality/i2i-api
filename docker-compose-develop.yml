@@ -11,7 +11,7 @@ develop:
     - postgres
 postgres:
   image: postgres:9.6
-  container_name: i2i-api-postgres-dev
+  container_name: i2i-api-postgres
   environment: 
     POSTGRES_PASSWORD: root
     POSTGRES_USER: root
