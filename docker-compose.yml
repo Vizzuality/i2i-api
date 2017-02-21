@@ -20,4 +20,4 @@ postgres:
     POSTGRES_USER: root
     POSTGRES_DB: i2i
   volumes:
-    - ./database:/var/lib/postgresql/data
+    - /data/i2i-api/database:/var/lib/postgresql/data
