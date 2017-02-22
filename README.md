@@ -3,6 +3,7 @@
 ## Endpoints
 
 GET: /api/v1/country -> Return all countries and his last year registered
+GET: /api/v1/country/:iso -> Return the country with iso of the param and all years for this country
 
 POST: /api/v1/country -> Save a new country and year. If the country already exist, only create this year for this country
 
