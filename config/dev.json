@@ -1,5 +1,5 @@
 {
     "database": {
-        "force": true
+        "force": false
     }
 }
