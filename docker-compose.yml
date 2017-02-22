@@ -12,12 +12,3 @@ prod:
     - ./app:/opt/i2i/app
   links: 
     - postgres
-postgres:
-  image: postgres:9.6
-  container_name: i2i-api-postgres
-  environment: 
-    POSTGRES_PASSWORD: root
-    POSTGRES_USER: root
-    POSTGRES_DB: i2i
-  volumes:
-    - /data/i2i-api/database:/var/lib/postgresql/data
