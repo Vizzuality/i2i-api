@@ -59,6 +59,30 @@ class CountryRouter {
         });
     }
 
+    static async getByIso(ctx) {
+        logger.info(`Obtaining country ${ctx.params.iso} and year ${ctx.params.year}`);
+        const result = await CountryModel.findAll({
+            where: {
+                iso: ctx.params.iso
+            },
+            include: [{
+                model: Country4YearModel
+            }]
+        });
+        if (!result || result.length === 0) {
+            ctx.throw(404, 'Not found');
+            return;
+        }
+        ctx.body = result.map((el) => {
+            const obj = el.get({
+                plain: true
+            });
+            obj.years = obj.country4years;
+            delete obj.country4years;
+            return obj;
+        });
+    }
+
     static async create(ctx) {
         logger.info('Creating country and year', ctx.request.body);
         logger.debug('Checking if the country exists');
@@ -137,6 +161,7 @@ async function checkExists(ctx, next) {
 
 router.get('/', CountryRouter.get);
 router.post('/', GeneralValidator.create, checkExists, CountryRouter.create);
+router.get('/:iso', CountryRouter.getByIso);
 router.get('/:iso/:year', CountryRouter.getByIsoAndYear);
 router.post('/:iso/:year/dataset', checkExists, GeneralValidator.uploadDataset, CountryRouter.uploadDataset);
 
