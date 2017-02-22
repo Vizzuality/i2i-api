@@ -10,7 +10,7 @@
         "port": 3000
     },
     "database": {
-        "force": true,
+        "force": false,
         "user": null,
         "password": null,
         "database": null,
