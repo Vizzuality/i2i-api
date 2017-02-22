@@ -11,7 +11,7 @@ class IndicatorService {
         const total = await IndicatorService.getTotal(iso, year);
         const result = await AnswerModel.findAll({
             raw: true,
-            attributes: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value', sequelize.fn('SUM', sequelize.col('weight'))],
+            attributes: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value', sequelize.fn('SUM', sequelize.col('weight')), sequelize.fn('COUNT', sequelize.col('id'))],
             where: {
                 year: parseInt(year, 10),
                 iso
@@ -21,6 +21,7 @@ class IndicatorService {
         });
         return result.map((el) => {
             el.percentage = (el.sum / total) * 100;
+            el.count = parseInt(el.count, 10);
             return el;
         });
     }
@@ -74,9 +75,10 @@ class IndicatorService {
         });
 
         return result.map((el) => {
-            if (totals[`${el.iso}-${el.year}`]){
+            if (totals[`${el.iso}-${el.year}`]) {
                 el.percentage = (el.sum / totals[`${el.iso}-${el.year}`]) * 100;
             }
+            el.count = parseInt(el.count, 10);
             return el;
         });
     }
