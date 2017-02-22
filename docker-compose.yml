@@ -8,7 +8,3 @@ prod:
     - prod.env
   command: start
   restart: always
-  volumes:
-    - ./app:/opt/i2i/app
-  links: 
-    - postgres
