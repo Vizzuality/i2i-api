@@ -6,6 +6,7 @@ const loader = require('loader');
 const convert = require('koa-convert');
 const ErrorSerializer = require('serializers/error.serializer');
 const models = require('models');
+const cors = require('kcors');
 const validate = require('koa-validate');
 
 const koaBody = require('koa-body')({
@@ -17,7 +18,7 @@ const koaBody = require('koa-body')({
 
 
 const app = new Koa();
-
+app.use(cors());
 validate(app);
 app.use(convert(koaBody));
 
