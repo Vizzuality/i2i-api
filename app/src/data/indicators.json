@@ -1,0 +1,15 @@
+{
+    "geographic_area": "Geographic Area",
+    "gender": "Gender",
+    "age": "Age",
+    "access_to_resources": "Access to Resources",
+    "dwelling_type": "Dwelling type: roof/dwelling",
+    "i2i_Marital_Status": "Marital Status",
+    "i2i_Education": "Level of education",
+    "i2i_Income_Sources": "Sources of income",
+    "fas_strand": "FAS - Financial Access Strand",
+    "savings_strand": "Savings Strand",
+    "remittances_strand": "Remittances Strand",
+    "insurance_strand": "Insurance Strand",
+    "credit_strand": "Credit Strand"
+}
