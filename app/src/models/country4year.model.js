@@ -6,8 +6,7 @@ module.exports = function (sequelize, DataTypes) {
             primaryKey: true
         },
         year: {
-            type: DataTypes.INTEGER,
-            unique: true
+            type: DataTypes.INTEGER
         },
         total: {
             type: DataTypes.DOUBLE,
