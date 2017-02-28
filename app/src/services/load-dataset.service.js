@@ -40,7 +40,7 @@ class LoadDatasetService {
 
     async insertOriginalAnswer(data, rowId) {
         logger.debug('Saving original answer');
-        OriginalAnswerModel.create({
+        await OriginalAnswerModel.create({
             answer: data,
             rowId,
             year: this.year,

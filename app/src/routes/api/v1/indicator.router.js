@@ -20,7 +20,7 @@ class IndicatorRouter {
         const isos = Object.keys(ctx.query);
         const isoFilter = [];
         for (let i = 0, length = isos.length; i < length; i++) {
-            if (isos[i] !== 'filter'){
+            if (isos[i] !== 'filters'){
                 isoFilter.push({
                     iso: isos[i],
                     year: parseInt(ctx.query[isos[i]], 10)
