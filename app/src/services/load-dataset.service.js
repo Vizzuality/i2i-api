@@ -63,7 +63,7 @@ class LoadDatasetService {
                 indicatorId: col.indicatorId,
                 country4yearId: this.country4yearId,
                 weight: parseFloat(data[this.weightColumn]),
-                value: data[this.columns[i]] ? data[this.columns[i]] : ''
+                value: data[this.columns[i]] ? data[this.columns[i]].trim() : ''
             });
         }
         await AnswerModel.bulkCreate(answers);

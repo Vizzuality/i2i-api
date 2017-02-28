@@ -45,19 +45,49 @@ class IndicatorService {
         return null;
     }
 
-    async getIndicator(indicatorId, filters) {
+    static async getRowIds(filters) {
+        const newFilter = [];
+        
+        const sql = 'SELECT row_id from answers where indicator_id = ? and value in (?)';
+        let resultSql = '';
+        const replacements = [];
+        for(let i = 0, length = filters.length; i < length; i++){
+            if (i === 0) {
+                resultSql += sql;
+            } else {
+                resultSql += ' INTERSECT ' + sql;
+            }
+            replacements.push(filters[i].indicatorId);
+            replacements.push(filters[i].value);
+        }
+        logger.debug('Filters', resultSql, replacements);
+
+        const result = await sequelize.query(resultSql, {replacements, type: sequelize.QueryTypes.SELECT });
+        logger.debug('Result rawid', result);
+
+        return result.map((el) => el.row_id);
+    }
+
+    async getIndicator(indicatorId, isos, filter) {
+        logger.info('Get indicators');
         const totals = {};
         let where = {
             indicatorId
         };
-        logger.debug(filters);
-        if (filters && Object.keys(filters).length > 0) {
+        if (filter) {
+            let rowids = await IndicatorService.getRowIds(JSON.parse(filter));
+            where.rowId = {
+                $in: rowids
+            };
+        }
+        
+        logger.debug(isos);
+        if (isos && Object.keys(isos).length > 0) {
             const tuples = [];
-            logger.debug('filters', filters);
-            for (let i = 0, length = filters.length; i < length; i++) {
-                const total = await IndicatorService.getTotal(filters[i].iso, filters[i].year);
-                tuples.push(Object.assign({}, filters[i]));
-                totals[`${filters[i].iso}-${filters[i].year}`] = total;
+            for (let i = 0, length = isos.length; i < length; i++) {
+                const total = await IndicatorService.getTotal(isos[i].iso, isos[i].year);
+                tuples.push(Object.assign({}, isos[i]));
+                totals[`${isos[i].iso}-${isos[i].year}`] = total;
             }
             where = {
                 $and: [where, {
@@ -65,7 +95,7 @@ class IndicatorService {
                 }]
             };
         }
-        logger.debug('totals', totals);
+
         const result = await AnswerModel.findAll({
             raw: true,
             attributes: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value', sequelize.fn('SUM', sequelize.col('weight')), sequelize.fn('COUNT', sequelize.col('id'))],

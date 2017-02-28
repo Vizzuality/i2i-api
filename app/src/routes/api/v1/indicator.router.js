@@ -7,7 +7,7 @@ const router = new Router({
     prefix: '/indicator',
 });
 
-class HiRouter {
+class IndicatorRouter {
 
     static async getIndicatorsByCountryAndYear(ctx) {
         const result = await indicatorService.getIndicatorsByCountryAndYear(ctx.params.country, ctx.params.year, ctx.query.where);
@@ -18,15 +18,17 @@ class HiRouter {
 
     static async getIndicator(ctx) {
         const isos = Object.keys(ctx.query);
-        const filters = [];
+        const isoFilter = [];
         for (let i = 0, length = isos.length; i < length; i++) {
-            filters.push({
-                iso: isos[i],
-                year: parseInt(ctx.query[isos[i]], 10)
-            });
+            if (isos[i] !== 'filter'){
+                isoFilter.push({
+                    iso: isos[i],
+                    year: parseInt(ctx.query[isos[i]], 10)
+                });
+            }
         }
 
-        const result = await indicatorService.getIndicator(ctx.params.indicatorId, filters);
+        const result = await indicatorService.getIndicator(ctx.params.indicatorId, isoFilter, ctx.query.filter);
         ctx.body = {
             data: result,
             title: indicators[ctx.params.indicatorId]
@@ -40,9 +42,9 @@ class HiRouter {
 
 }
 
-router.get('/:indicatorId', HiRouter.getIndicator);
-router.get('/:country/:year', HiRouter.getIndicatorsByCountryAndYear);
-router.get('/', HiRouter.getListIndicators);
+router.get('/:indicatorId', IndicatorRouter.getIndicator);
+router.get('/:country/:year', IndicatorRouter.getIndicatorsByCountryAndYear);
+router.get('/', IndicatorRouter.getListIndicators);
 
 
 module.exports = router;
