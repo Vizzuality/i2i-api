@@ -16,7 +16,16 @@ POST: /api/v1/country -> Save a new country and year. If the country already exi
 }
 ```
 
-GET: /api/v1/indicator/:indicatorId?iso=year -> Return the statistics for the indicator for this country and year. You can filter by several countries and years
+GET: /api/v1/indicator/:indicatorId -> Return the statistics for the indicator for this country and year. You can filter by several countries and years
+
+
+Available filters as query params:
+
+| QueryParam   |      Description      |  Example |
+|----------|:-------------:|------|
+| filters |  Filter by several indicators with a set of values. The value should be a Array | [{"indicatorId":"gender","value":["Female","Male"]},{"indicatorId":"access_to_resources","value":["Paraffin (Lantern)  ","Firewood  "]}] |
+| iso-value |    Query param with key the iso of the country and value the year   |   ESP=2015 |
+
 
 GET: /api/v1/indicator/:country/:year -> Return the statistics for all indicators of the poll selected with country and year
 
