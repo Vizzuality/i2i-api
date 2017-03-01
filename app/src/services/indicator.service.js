@@ -59,6 +59,15 @@ class IndicatorService {
             }
             replacements.push(filters[i].indicatorId);
             replacements.push(filters[i].value);
+            if (filters[i].childIndicatorId){
+                sql += ' and child_indicator_id in (?)';
+                replacements.push(filters[i].childIndicatorId);
+            }
+            if (filters[i].answerId){
+                sql += ' and answer_id in (?)';
+                replacements.push(filters[i].answer_id);
+            }
+
         }
         logger.debug('Filters', resultSql, replacements);
 
