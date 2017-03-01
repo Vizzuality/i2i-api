@@ -75,6 +75,7 @@ class IndicatorService {
             indicatorId
         };
         if (filter) {
+            logger.debug('Filter by indicatorid', filter);
             let rowids = await IndicatorService.getRowIds(JSON.parse(filter));
             where.rowId = {
                 $in: rowids
@@ -95,7 +96,7 @@ class IndicatorService {
                 }]
             };
         }
-
+        logger.debug('where', where);
         const result = await AnswerModel.findAll({
             raw: true,
             attributes: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value', sequelize.fn('SUM', sequelize.col('weight')), sequelize.fn('COUNT', sequelize.col('id'))],

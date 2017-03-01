@@ -9,7 +9,7 @@ const sequelize = new Sequelize(config.get('database.database'), config.get('dat
     host: config.get('database.host'),
     port: config.get('database.port'),
     dialect: 'postgres',
-    logging: false,
+    logging: console.log,
     pool: {
         max: 5,
         min: 0,

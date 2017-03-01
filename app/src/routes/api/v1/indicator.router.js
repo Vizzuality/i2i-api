@@ -28,7 +28,7 @@ class IndicatorRouter {
             }
         }
 
-        const result = await indicatorService.getIndicator(ctx.params.indicatorId, isoFilter, ctx.query.filter);
+        const result = await indicatorService.getIndicator(ctx.params.indicatorId, isoFilter, ctx.query.filters);
         ctx.body = {
             data: result,
             title: indicators[ctx.params.indicatorId]
