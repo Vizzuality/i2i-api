@@ -40,13 +40,13 @@ class LoadDatasetService {
 
     async insertOriginalAnswer(data, rowId) {
         logger.debug('Saving original answer');
-        await OriginalAnswerModel.create({
+        const answer = await OriginalAnswerModel.create({
             answer: data,
-            rowId,
             year: this.year,
             iso: this.iso,
             country4yearId: this.country4yearId
         });
+        return answer.id;
     }
 
     async insertAnswers(data, rowId) {
@@ -81,8 +81,8 @@ class LoadDatasetService {
 
                     (async() => {
                         logger.debug('Insert new data');
-                        const rowId = this.getId.next().value;
-                        await this.insertOriginalAnswer(data, rowId);
+                        
+                        const rowId = await this.insertOriginalAnswer(data);
                         await this.insertAnswers(data, rowId);
 
                     })().then(() => stream.resume(), (err) => {

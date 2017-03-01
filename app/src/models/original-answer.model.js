@@ -5,11 +5,6 @@ module.exports = function (sequelize, DataTypes) {
             autoIncrement: true,
             primaryKey: true,
         },
-        rowId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            field: 'row_id'
-        },
         answer: {
             type: DataTypes.JSONB,
             allowNull: false
