@@ -2,7 +2,71 @@
 
 ## Endpoints
 
-GET: /api/v1/country -> Return all countries and his last year registered
+GET: /api/v1/country -> Return all countries with its years
+
+ QueryParam   |      Description      |  Example |
+|----------|:-------------:|------|
+| lastyear | return only last year | 'true' |
+
+Example:
+
+```json
+
+GET /api/v1/country
+
+[
+	{
+	id: 1,
+	name: "spain",
+	iso: "ESP",
+	createdAt: "2017-03-01T10:07:44.521Z",
+	updatedAt: "2017-03-01T10:07:44.521Z",
+	year: [
+		{
+			id: 1,
+			year: 2009,
+			total: 222222,
+			createdAt: "2017-03-01T10:07:44.547Z",
+			updatedAt: "2017-03-01T10:07:44.547Z",
+			countryId: 1
+		},
+		{
+			id: 34,
+			year: 2015,
+			total: 22,
+			createdAt: "2017-03-14T10:54:16.043Z",
+			updatedAt: "2017-03-14T10:54:16.043Z",
+			countryId: 1
+		}
+		]
+	}
+]
+
+GET /api/v1/country?lastyear=true
+
+[
+	{
+	id: 1,
+	name: "spain",
+	iso: "ESP",
+	createdAt: "2017-03-01T10:07:44.521Z",
+	updatedAt: "2017-03-01T10:07:44.521Z",
+	year: [
+		{
+			id: 34,
+			year: 2015,
+			total: 22,
+			createdAt: "2017-03-14T10:54:16.043Z",
+			updatedAt: "2017-03-14T10:54:16.043Z",
+			countryId: 1
+		}
+		]
+	}
+]
+
+
+```
+
 GET: /api/v1/country/:iso -> Return the country with iso of the param and all years for this country
 
 POST: /api/v1/country -> Save a new country and year. If the country already exist, only create this year for this country

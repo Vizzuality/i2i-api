@@ -13,23 +13,33 @@ class CountryRouter {
 
     static async get(ctx) {
         logger.info('Obtaining all countries with last year');
-        const result = await CountryModel.findAll({
+        const query = {
             include: [{
                 model: Country4YearModel,
                 order: [
                     ['year', 'DESC']
-                ],
-                limit: 1
+                ]
             }]
-        });
+        };
+        if (ctx.query.lastyear && ctx.query.lastyear=== 'true'){
+            query.include[0].limit = 1;
+        }
+        
+        const result = await CountryModel.findAll(query);
+       
         ctx.body = result.map((el) => {
             const obj = el.get({
                 plain: true
             });
-            obj.year = obj.country4years[0];
+            if (ctx.query.lastyear && ctx.query.lastyear=== 'true'){
+                obj.year = [obj.country4years[0]];
+            }else {
+                obj.year = obj.country4years;
+            }
             delete obj.country4years;
             return obj;
         });
+        
     }
 
     static async getByIsoAndYear(ctx) {
