@@ -7,9 +7,9 @@
     "i2i_Marital_Status": "Marital Status",
     "i2i_Education": "Level of education",
     "i2i_Income_Sources": "Sources of income",
-    "fas_strand": "FAS - Financial Access Strand",
-    "savings_strand": "Savings Strand",
-    "remittances_strand": "Remittances Strand",
-    "insurance_strand": "Insurance Strand",
-    "credit_strand": "Credit Strand"
+    "fas_strand": "Financial Access",
+    "savings_strand": "Access to savings",
+    "remittances_strand": "Send and receive money",
+    "insurance_strand": "Access to insurance",
+    "credit_strand": "Access to credit"
 }
