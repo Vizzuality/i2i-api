@@ -118,7 +118,7 @@ class IndicatorService {
         if (filter) {
             logger.debug('Filter by indicatorid', filter);
             // let rowids = await IndicatorService.getRowIds(JSON.parse(filter));
-            let query = IndicatorService.getRowIds(JSON.parse(filter));
+            let query = IndicatorService.getQueryRowIds(JSON.parse(filter));
             where.rowId = {
                 $in: sequelize.literal(query)
             };
