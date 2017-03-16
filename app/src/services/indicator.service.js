@@ -81,31 +81,43 @@ class IndicatorService {
         const newFilter = [];
         
         const sql = 'SELECT row_id from answers where indicator_id = ? and value in (?)';
+
+        
         let resultSql = '';
         const replacements = [];
         for(let i = 0, length = filters.length; i < length; i++){
             if (i === 0) {
-                resultSql += sql;
+                resultSql += sequelize.dialect.QueryGenerator.selectQuery('answers', {
+                    where: {
+                        indicatorId: filters[i].indicatorId,
+                        value: filters[i].value
+                    }
+                });
             } else {
-                resultSql += ' INTERSECT ' + sql;
+                resultSql += ' INTERSECT ' + sequelize.dialect.QueryGenerator.selectQuery('answers', {
+                    where: {
+                        indicatorId: filters[i].indicatorId,
+                        value: filters[i].value
+                    }
+                });
             }
-            replacements.push(filters[i].indicatorId);
-            replacements.push(filters[i].value);
-            if (filters[i].childIndicatorId){
-                sql += ' and child_indicator_id in (?)';
-                replacements.push(filters[i].childIndicatorId);
-            }
-            if (filters[i].answerId){
-                sql += ' and answer_id in (?)';
-                replacements.push(filters[i].answer_id);
-            }
+            // replacements.push(filters[i].indicatorId);
+            // replacements.push(filters[i].value);
+            // if (filters[i].childIndicatorId){
+            //     sql += ' and child_indicator_id in (?)';
+            //     replacements.push(filters[i].childIndicatorId);
+            // }
+            // if (filters[i].answerId){
+            //     sql += ' and answer_id in (?)';
+            //     replacements.push(filters[i].answer_id);
+            // }
 
         }
-        logger.debug('Filters', resultSql, replacements);
-        let query =  sequelize.dialect.QueryGenerator.selectQuery(resultSql, {replacements, type: sequelize.QueryTypes.SELECT }).slice(0,-1);
+        // logger.debug('Filters', resultSql, replacements);
+        // let query =  sequelize.dialect.QueryGenerator.selectQuery(resultSql, {replacements, type: sequelize.QueryTypes.SELECT }).slice(0,-1);
 
-        logger.debug('Query', query);
-        return query;
+        logger.debug('Query', resultSql);
+        return resultSql;
         // const result = await sequelize.query(resultSql, {replacements, type: sequelize.QueryTypes.SELECT });
         // logger.debug('Result rawid', result);
 
