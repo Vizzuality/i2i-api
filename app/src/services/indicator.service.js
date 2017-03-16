@@ -45,7 +45,39 @@ class IndicatorService {
         return null;
     }
 
-    static async getRowIds(filters) {
+    // static async getRowIds(filters) {
+    //     const newFilter = [];
+        
+    //     const sql = 'SELECT row_id from answers where indicator_id = ? and value in (?)';
+    //     let resultSql = '';
+    //     const replacements = [];
+    //     for(let i = 0, length = filters.length; i < length; i++){
+    //         if (i === 0) {
+    //             resultSql += sql;
+    //         } else {
+    //             resultSql += ' INTERSECT ' + sql;
+    //         }
+    //         replacements.push(filters[i].indicatorId);
+    //         replacements.push(filters[i].value);
+    //         if (filters[i].childIndicatorId){
+    //             sql += ' and child_indicator_id in (?)';
+    //             replacements.push(filters[i].childIndicatorId);
+    //         }
+    //         if (filters[i].answerId){
+    //             sql += ' and answer_id in (?)';
+    //             replacements.push(filters[i].answer_id);
+    //         }
+
+    //     }
+    //     logger.debug('Filters', resultSql, replacements);
+
+    //     const result = await sequelize.query(resultSql, {replacements, type: sequelize.QueryTypes.SELECT });
+    //     logger.debug('Result rawid', result);
+
+    //     return result.map((el) => el.row_id);
+    // }
+
+    static async getQueryRowIds(filters) {
         const newFilter = [];
         
         const sql = 'SELECT row_id from answers where indicator_id = ? and value in (?)';
@@ -70,11 +102,11 @@ class IndicatorService {
 
         }
         logger.debug('Filters', resultSql, replacements);
+        return sequelize.dialect.QueryGenerator.selectQuery(resultSql, {replacements, type: sequelize.QueryTypes.SELECT }).slice(0,-1);
+        // const result = await sequelize.query(resultSql, {replacements, type: sequelize.QueryTypes.SELECT });
+        // logger.debug('Result rawid', result);
 
-        const result = await sequelize.query(resultSql, {replacements, type: sequelize.QueryTypes.SELECT });
-        logger.debug('Result rawid', result);
-
-        return result.map((el) => el.row_id);
+        // return result.map((el) => el.row_id);
     }
 
     async getIndicator(indicatorId, isos, filter) {
@@ -85,9 +117,10 @@ class IndicatorService {
         };
         if (filter) {
             logger.debug('Filter by indicatorid', filter);
-            let rowids = await IndicatorService.getRowIds(JSON.parse(filter));
+            // let rowids = await IndicatorService.getRowIds(JSON.parse(filter));
+            let query = IndicatorService.getRowIds(JSON.parse(filter));
             where.rowId = {
-                $in: rowids
+                $in: sequelize.literal(query)
             };
         }
         
