@@ -95,6 +95,7 @@ class IndicatorService {
                 });
             } else {
                 resultSql += ' INTERSECT ' + sequelize.dialect.QueryGenerator.selectQuery('answers', {
+                    attributes: ['rowId'],
                     where: {
                         indicatorId: filters[i].indicatorId,
                         value: filters[i].value
@@ -135,7 +136,7 @@ class IndicatorService {
             // let rowids = await IndicatorService.getRowIds(JSON.parse(filter));
             let query = IndicatorService.getQueryRowIds(JSON.parse(filter));
             where.rowId = {
-                $in: sequelize.literal(query)
+                $in: sequelize.literal(`( ${query} )`)
             };
         }
         
