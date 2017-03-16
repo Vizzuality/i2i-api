@@ -86,7 +86,7 @@ class IndicatorService {
         let resultSql = '';
         const replacements = [];
         for(let i = 0, length = filters.length; i < length; i++){
-            where = {
+            let where = {
                 indicator_id: filters[i].indicatorId,
                 value: filters[i].value
             };
@@ -104,18 +104,12 @@ class IndicatorService {
             if (i === 0) {
                 resultSql += sequelize.dialect.QueryGenerator.selectQuery('answers', {
                     attributes: ['row_id'],
-                    where: {
-                        indicator_id: filters[i].indicatorId,
-                        value: filters[i].value
-                    }
+                    where
                 }).slice(0,-1);
             } else {
                 resultSql += ' INTERSECT ' + sequelize.dialect.QueryGenerator.selectQuery('answers', {
                     attributes: ['row_id'],
-                    where: {
-                        indicator_id: filters[i].indicatorId,
-                        value: filters[i].value
-                    }
+                    where
                 }).slice(0,-1);
             }
             
