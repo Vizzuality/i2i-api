@@ -102,7 +102,10 @@ class IndicatorService {
 
         }
         logger.debug('Filters', resultSql, replacements);
-        return sequelize.dialect.QueryGenerator.selectQuery(resultSql, {replacements, type: sequelize.QueryTypes.SELECT }).slice(0,-1);
+        let query =  sequelize.dialect.QueryGenerator.selectQuery(resultSql, {replacements, type: sequelize.QueryTypes.SELECT }).slice(0,-1);
+
+        logger.debug('Query', query);
+        return query;
         // const result = await sequelize.query(resultSql, {replacements, type: sequelize.QueryTypes.SELECT });
         // logger.debug('Result rawid', result);
 
