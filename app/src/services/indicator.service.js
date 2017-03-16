@@ -86,6 +86,21 @@ class IndicatorService {
         let resultSql = '';
         const replacements = [];
         for(let i = 0, length = filters.length; i < length; i++){
+            where = {
+                indicator_id: filters[i].indicatorId,
+                value: filters[i].value
+            };
+            if (filters[i].childIndicatorId){
+                where.child_indicator_id = {
+                    $in: filters[i].childIndicatorId
+                }
+            }
+            if (filters[i].answerId){
+                where.answer_id = {
+                    $in: filters[i].answer_id
+                }
+            }
+
             if (i === 0) {
                 resultSql += sequelize.dialect.QueryGenerator.selectQuery('answers', {
                     attributes: ['row_id'],
@@ -103,27 +118,12 @@ class IndicatorService {
                     }
                 }).slice(0,-1);
             }
-            // replacements.push(filters[i].indicatorId);
-            // replacements.push(filters[i].value);
-            // if (filters[i].childIndicatorId){
-            //     sql += ' and child_indicator_id in (?)';
-            //     replacements.push(filters[i].childIndicatorId);
-            // }
-            // if (filters[i].answerId){
-            //     sql += ' and answer_id in (?)';
-            //     replacements.push(filters[i].answer_id);
-            // }
+            
+            
 
         }
-        // logger.debug('Filters', resultSql, replacements);
-        // let query =  sequelize.dialect.QueryGenerator.selectQuery(resultSql, {replacements, type: sequelize.QueryTypes.SELECT }).slice(0,-1);
-
         logger.debug('Query', resultSql.toString());
-        return resultSql.toString();
-        // const result = await sequelize.query(resultSql, {replacements, type: sequelize.QueryTypes.SELECT });
-        // logger.debug('Result rawid', result);
-
-        // return result.map((el) => el.row_id);
+        return resultSql;
     }
 
     async getIndicator(indicatorId, isos, filter) {
