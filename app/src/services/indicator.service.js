@@ -90,7 +90,7 @@ class IndicatorService {
                 resultSql += sequelize.dialect.QueryGenerator.selectQuery('answers', {
                     attributes: ['row_id'],
                     where: {
-                        indicatorId: filters[i].indicatorId,
+                        indicator_id: filters[i].indicatorId,
                         value: filters[i].value
                     }
                 }).slice(0,-1);
@@ -98,7 +98,7 @@ class IndicatorService {
                 resultSql += ' INTERSECT ' + sequelize.dialect.QueryGenerator.selectQuery('answers', {
                     attributes: ['row_id'],
                     where: {
-                        indicatorId: filters[i].indicatorId,
+                        indicator_id: filters[i].indicatorId,
                         value: filters[i].value
                     }
                 }).slice(0,-1);
