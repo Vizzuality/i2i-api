@@ -77,7 +77,7 @@ class IndicatorService {
     //     return result.map((el) => el.row_id);
     // }
 
-    static async getQueryRowIds(filters) {
+    static getQueryRowIds(filters) {
         const newFilter = [];
         
         const sql = 'SELECT row_id from answers where indicator_id = ? and value in (?)';
