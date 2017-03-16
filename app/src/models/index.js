@@ -11,7 +11,7 @@ const sequelize = new Sequelize(config.get('database.database'), config.get('dat
     dialect: 'postgres',
     logging: config.get('logger.level')==='debug' ? console.log : false,
     pool: {
-        max: 5,
+        max: 20,
         min: 0,
         idle: 10000
     }
