@@ -158,7 +158,7 @@ class IndicatorService {
                 totals[`${el.iso}-${el.year}`] = 0;
             }
             totals[`${el.iso}-${el.year}`] += el.sum;
-            return null;
+            return el;
         });
 
 
