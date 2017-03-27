@@ -81,40 +81,35 @@ class IndicatorService {
         const newFilter = [];
         
         const sql = 'SELECT row_id from answers where indicator_id = ? and value in (?)';
-
         
         let resultSql = '';
-        const replacements = [];
-        for(let i = 0, length = filters.length; i < length; i++){
-            let where = {
+        for (let i = 0, length = filters.length; i < length; i++){
+            const where = {
                 indicator_id: filters[i].indicatorId,
                 value: filters[i].value
             };
             if (filters[i].childIndicatorId){
                 where.child_indicator_id = {
                     $in: filters[i].childIndicatorId
-                }
+                };
             }
             if (filters[i].answerId){
                 where.answer_id = {
                     $in: filters[i].answer_id
-                }
+                };
             }
 
             if (i === 0) {
                 resultSql += sequelize.dialect.QueryGenerator.selectQuery('answers', {
                     attributes: ['row_id'],
                     where
-                }).slice(0,-1);
+                }).slice(0, -1);
             } else {
                 resultSql += ' INTERSECT ' + sequelize.dialect.QueryGenerator.selectQuery('answers', {
                     attributes: ['row_id'],
                     where
-                }).slice(0,-1);
+                }).slice(0, -1);
             }
-            
-            
-
         }
         logger.debug('Query', resultSql.toString());
         return resultSql;
@@ -138,11 +133,11 @@ class IndicatorService {
         logger.debug(isos);
         if (isos && Object.keys(isos).length > 0) {
             const tuples = [];
-            for (let i = 0, length = isos.length; i < length; i++) {
-                const total = await IndicatorService.getTotal(isos[i].iso, isos[i].year);
-                tuples.push(Object.assign({}, isos[i]));
-                totals[`${isos[i].iso}-${isos[i].year}`] = total;
-            }
+            // for (let i = 0, length = isos.length; i < length; i++) {
+            //     const total = await IndicatorService.getTotal(isos[i].iso, isos[i].year);
+            //     tuples.push(Object.assign({}, isos[i]));
+            //     totals[`${isos[i].iso}-${isos[i].year}`] = total;
+            // }
             where = {
                 $and: [where, {
                     $or: tuples
@@ -157,6 +152,15 @@ class IndicatorService {
             group: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value'],
             order: ['indicatorId']
         });
+
+        result.map((el) => {
+            if (!totals[`${el.iso}-${el.year}`]){
+                totals[`${el.iso}-${el.year}`] = 0;
+            }
+            totals[`${el.iso}-${el.year}`] += el.sum;
+            return null;
+        });
+
 
         return result.map((el) => {
             if (totals[`${el.iso}-${el.year}`]) {
