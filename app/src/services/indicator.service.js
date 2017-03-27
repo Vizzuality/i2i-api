@@ -132,17 +132,15 @@ class IndicatorService {
         
         logger.debug(isos);
         if (isos && Object.keys(isos).length > 0) {
-            // const tuples = [];
-            // for (let i = 0, length = isos.length; i < length; i++) {
-            //     const total = await IndicatorService.getTotal(isos[i].iso, isos[i].year);
-            //     tuples.push(Object.assign({}, isos[i]));
-            //     totals[`${isos[i].iso}-${isos[i].year}`] = total;
-            // }
-            // where = {
-            //     $and: [where, {
-            //         $or: tuples
-            //     }]
-            // };
+            const tuples = [];
+            for (let i = 0, length = isos.length; i < length; i++) {
+                tuples.push(Object.assign({}, isos[i]));
+            }
+            where = {
+                $and: [where, {
+                    $or: tuples
+                }]
+            };
         }
         logger.debug('where', where);
         const result = await AnswerModel.findAll({
