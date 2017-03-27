@@ -152,14 +152,16 @@ class IndicatorService {
             group: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value'],
             order: ['indicatorId']
         });
-
+        logger.info('Obtaining totals');
         result.map((el) => {
-            if (!totals[`${el.iso}-${el.year}`]){
+            if (!totals[`${el.iso}-${el.year}`]) {
                 totals[`${el.iso}-${el.year}`] = 0;
             }
             totals[`${el.iso}-${el.year}`] += el.sum;
             return el;
         });
+
+        logger.info('Obtaining totals', totals);
 
 
         return result.map((el) => {
