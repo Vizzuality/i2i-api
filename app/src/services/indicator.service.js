@@ -174,11 +174,7 @@ class IndicatorService {
             totals[`${el.iso}-${el.year}`] += el.sum;
             return el;
         });
-
-
-        logger.info('Obtaining totals', totals);
-
-
+        logger.debug('Calculating percentage');
         return result.map((el) => {
             if (totals[`${el.iso}-${el.year}`]) {
                 el.percentage = (el.sum / totals[`${el.iso}-${el.year}`]) * 100;
