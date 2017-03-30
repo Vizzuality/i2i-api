@@ -163,11 +163,11 @@ class IndicatorService {
             group: ['iso', 'year', 'row_id', 'weight']
         }).slice(0, -1);
         const totalQuery = await sequelize.query(`
-            select iso, year,sum( weight) as sum 
+            select t.iso as iso, t.year as year, sum( t.weight) as sum 
             from (
                 ${innerQuery}
-            ) 
-            group by iso, year, row_id, weight) as c group by c.iso, c.year;
+            ) as t
+            group by t.iso, t.year;
         `);
         logger.info('Obtaining totalss');
         totalQuery.map((el) => {
