@@ -119,7 +119,7 @@ class IndicatorService {
         logger.info('Get indicators');
         const totals = {};
         let where = {
-            indicatorId
+            indicator_id: indicatorId
         };
         if (filter) {
             logger.debug('Filter by indicatorid', filter);
@@ -158,7 +158,7 @@ class IndicatorService {
         //     group: ['iso', 'year']
         // });
         const innerQuery = sequelize.dialect.QueryGenerator.selectQuery('answers', {
-            attributes: ['iso', 'year', 'row_id', 'weight' ],
+            attributes: ['iso', 'year', 'row_id', 'weight'],
             where,
             group: ['iso', 'year', 'row_id', 'weight']
         }).slice(0, -1);
