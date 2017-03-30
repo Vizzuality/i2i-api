@@ -151,25 +151,22 @@ class IndicatorService {
             order: ['indicatorId']
         });
 
-        // const totalQuery = await AnswerModel.findAll({
-        //     raw: true,
-        //     attributes: ['iso', 'year', sequelize.fn('SUM', sequelize.col('weight'))],
-        //     where,
-        //     group: ['iso', 'year']
-        // });
+
+        logger.info('Obtaining totalss');
         const innerQuery = sequelize.dialect.QueryGenerator.selectQuery('answers', {
             attributes: ['iso', 'year', 'row_id', 'weight'],
             where,
             group: ['iso', 'year', 'row_id', 'weight']
         }).slice(0, -1);
+        
         const totalQuery = await sequelize.query(`
             select t.iso as iso, t.year as year, sum( t.weight) as sum 
             from (
                 ${innerQuery}
             ) as t
             group by t.iso, t.year;
-        `);
-        logger.info('Obtaining totalss');
+        `, { type: sequelize.QueryTypes.SELECT });
+        logger.debug('Totals obtained', totalQuery);
         totalQuery.map((el) => {
             if (!totals[`${el.iso}-${el.year}`]) {
                 totals[`${el.iso}-${el.year}`] = 0;
@@ -177,6 +174,7 @@ class IndicatorService {
             totals[`${el.iso}-${el.year}`] += el.sum;
             return el;
         });
+
 
         logger.info('Obtaining totals', totals);
 
