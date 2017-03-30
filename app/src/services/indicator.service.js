@@ -150,8 +150,15 @@ class IndicatorService {
             group: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value'],
             order: ['indicatorId']
         });
-        logger.info('Obtaining totals');
-        result.map((el) => {
+
+        const totalQuery = await AnswerModel.findAll({
+            raw: true,
+            attributes: ['iso', 'year', sequelize.fn('SUM', sequelize.col('weight'))],
+            where,
+            group: ['iso', 'year']
+        });
+        logger.info('Obtaining totalss');
+        totalQuery.map((el) => {
             if (!totals[`${el.iso}-${el.year}`]) {
                 totals[`${el.iso}-${el.year}`] = 0;
             }
