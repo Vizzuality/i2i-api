@@ -55,6 +55,7 @@ models.sequelize.sync({
 });
 
 const instance = app.listen(process.env.PORT, () => {});
+instance.setTimeout(10 * 60 * 1000);
 logger.info('Server started in ', process.env.PORT);
 
 
