@@ -194,6 +194,9 @@ class CountryRouter {
         if (ctx.request.body.mapUrl) {
             updateObj.mapUrl = ctx.request.body.mapUrl;
         }
+        if (ctx.request.body.total) {
+            updateObj.total = ctx.request.body.total;
+        }
         await Country4YearModel.update(updateObj, {
             where: {
                 countryId: country[0].id,

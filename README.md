@@ -89,7 +89,8 @@ PATCH: /api/v1/country/:iso/:year -> Update data for that country and year.
 ```json
 
 {
-	"mapUrl": "http://link"
+	"mapUrl": "http://link",
+	"total": 200.20
 }
 
 ```
