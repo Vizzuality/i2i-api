@@ -16,27 +16,27 @@ GET /api/v1/country
 
 [
 	{
-	id: 1,
-	name: "spain",
-	iso: "ESP",
-	createdAt: "2017-03-01T10:07:44.521Z",
-	updatedAt: "2017-03-01T10:07:44.521Z",
-	year: [
+	"id": 1,
+	"name": "spain",
+	"iso": "ESP",
+	"createdAt": "2017-03-01T10:07:44.521Z",
+	"updatedAt": "2017-03-01T10:07:44.521Z",
+	"year": [
 		{
-			id: 1,
-			year: 2009,
-			total: 222222,
-			createdAt: "2017-03-01T10:07:44.547Z",
-			updatedAt: "2017-03-01T10:07:44.547Z",
-			countryId: 1
+			"id": 1,
+			"year": 2009,
+			"total": 222222,
+			"createdAt": "2017-03-01T10:07:44.547Z",
+			"updatedAt": "2017-03-01T10:07:44.547Z",
+			"countryId": 1
 		},
 		{
-			id: 34,
-			year: 2015,
-			total: 22,
-			createdAt: "2017-03-14T10:54:16.043Z",
-			updatedAt: "2017-03-14T10:54:16.043Z",
-			countryId: 1
+			"id": 34,
+			"year": 2015,
+			"total": 22,
+			"createdAt": "2017-03-14T10:54:16.043Z",
+			"updatedAt": "2017-03-14T10:54:16.043Z",
+			"countryId": 1
 		}
 		]
 	}
@@ -46,19 +46,20 @@ GET /api/v1/country?lastyear=true
 
 [
 	{
-	id: 1,
-	name: "spain",
-	iso: "ESP",
-	createdAt: "2017-03-01T10:07:44.521Z",
-	updatedAt: "2017-03-01T10:07:44.521Z",
-	year: [
+	"id": 1,
+	"name": "spain",
+	"iso": "ESP",
+	"createdAt": "2017-03-01T10:07:44.521Z",
+	"updatedAt": "2017-03-01T10:07:44.521Z",
+	"year": [
 		{
-			id: 34,
-			year: 2015,
-			total: 22,
-			createdAt: "2017-03-14T10:54:16.043Z",
-			updatedAt: "2017-03-14T10:54:16.043Z",
-			countryId: 1
+			"id": 34,
+			"year": 2015,
+			"total": 22,
+			"mapUrl": null,
+			"createdAt": "2017-03-14T10:54:16.043Z",
+			"updatedAt": "2017-03-14T10:54:16.043Z",
+			"countryId": 1
 		}
 		]
 	}
@@ -80,6 +81,17 @@ POST: /api/v1/country -> Save a new country and year. If the country already exi
 	"year": 2017,
 	"total": 20000.2 // total of poblation
 }
+
+```
+
+PATCH: /api/v1/country/:iso/:year -> Update data for that country and year.
+
+```json
+
+{
+	"mapUrl": "http://link"
+}
+
 ```
 
 GET: /api/v1/indicator/:indicatorId -> Return the statistics for the indicator for this country and year. You can filter by several countries and years
