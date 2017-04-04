@@ -2,6 +2,8 @@
 
 ## Endpoints
 
+### Country
+
 GET: /api/v1/country -> Return all countries with its years
 
  QueryParam   |      Description      |  Example |
@@ -70,7 +72,15 @@ GET /api/v1/country?lastyear=true
 
 GET: /api/v1/country/:iso -> Return the country with iso of the param and all years for this country
 
-GET: /api/v1/country/:iso/download -> Download csv with all answers
+GET: /api/v1/country/:iso/:year/download -> Download csv with all answers
+
+PATCH: /api/v1/country/:iso -> Update data for that country
+
+```json
+
+{
+	"mapUrl": "http://link"
+}
 
 POST: /api/v1/country -> Save a new country and year. If the country already exist, only create this year for this country
 
@@ -89,11 +99,12 @@ PATCH: /api/v1/country/:iso/:year -> Update data for that country and year.
 ```json
 
 {
-	"mapUrl": "http://link",
 	"total": 200.20
 }
 
 ```
+
+### Indicator
 
 GET: /api/v1/indicator/:indicatorId -> Return the statistics for the indicator for this country and year. You can filter by several countries and years
 

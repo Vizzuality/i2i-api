@@ -108,7 +108,8 @@ class CountryRouter {
         if (!exists || exists.length === 0) {
             exists = await CountryModel.create({
                 name: ctx.request.body.name,
-                iso: ctx.request.body.iso
+                iso: ctx.request.body.iso,
+                mapUrl: ctx.request.body.mapUrl
             });
         } else {
             exists = exists[0];
@@ -116,8 +117,7 @@ class CountryRouter {
         await Country4YearModel.create({
             countryId: exists.id,
             year: ctx.request.body.year,
-            total: ctx.request.body.total,
-            mapUrl: ctx.request.body.mapUrl
+            total: ctx.request.body.total
         });
         const data = await CountryModel.findAll({
             where: {
@@ -192,9 +192,6 @@ class CountryRouter {
         }
         
         const updateObj = {};
-        if (ctx.request.body.mapUrl) {
-            updateObj.mapUrl = ctx.request.body.mapUrl;
-        }
         if (ctx.request.body.total) {
             updateObj.total = ctx.request.body.total;
         }
@@ -207,6 +204,31 @@ class CountryRouter {
 
         await CountryRouter.getByIsoAndYear(ctx);
     }
+
+    static async updateCountry(ctx) {
+        logger.info('Updating country');
+        const country = await CountryModel.findAll({
+            where: {
+                iso: ctx.params.iso
+            }
+        });
+        if (!country || country.length === 0) {
+            ctx.throw(404, 'Country not found');
+        }
+
+        const updateObj = {};
+        if (ctx.request.body.mapUrl) {
+            updateObj.mapUrl = ctx.request.body.mapUrl;
+        }
+        await CountryModel.update(updateObj, {
+            where: {
+                iso: ctx.params.iso
+            }
+        });
+
+        await CountryRouter.getByIso(ctx);
+    }
+
 
 }
 
@@ -232,6 +254,7 @@ async function checkExists(ctx, next) {
 router.get('/', CountryRouter.get);
 router.post('/', GeneralValidator.create, checkExists, CountryRouter.create);
 router.get('/:iso', CountryRouter.getByIso);
+router.patch('/:iso', CountryRouter.updateCountry);
 router.get('/:iso/:year', CountryRouter.getByIsoAndYear);
 router.patch('/:iso/:year', CountryRouter.updateIsoAndYear);
 router.post('/:iso/:year/dataset', checkExists, GeneralValidator.uploadDataset, CountryRouter.uploadDataset);
