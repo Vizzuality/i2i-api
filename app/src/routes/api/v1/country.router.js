@@ -116,6 +116,7 @@ class CountryRouter {
         await Country4YearModel.create({
             countryId: exists.id,
             year: ctx.request.body.year,
+            total: ctx.request.body.total,
             mapUrl: ctx.request.body.mapUrl
         });
         const data = await CountryModel.findAll({
