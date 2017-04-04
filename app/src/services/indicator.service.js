@@ -108,7 +108,7 @@ class IndicatorService {
         }
         return AnswerModel.findAll({
             raw: true,
-            attributes: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value'],
+            attributes: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value', 'weight'],
             where,
             order: ['indicatorId']
         });
@@ -142,7 +142,7 @@ class IndicatorService {
         logger.debug('where', where);
         const result = await AnswerModel.findAll({
             raw: true,
-            attributes: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value', sequelize.fn('SUM', sequelize.col('weight')), sequelize.fn('COUNT', sequelize.col('id'))],
+            attributes: ['iso', 'year', 'row_id', 'indicatorId', 'childIndicatorId', 'answerId', 'value', sequelize.fn('SUM', sequelize.col('weight')), sequelize.fn('COUNT', sequelize.col('id'))],
             where,
             group: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value'],
             order: ['indicatorId']
