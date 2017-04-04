@@ -70,6 +70,22 @@ class IndicatorRouter {
         ctx.body.end();
     }
 
+    static async getExpandedIndicator(ctx) {
+        const isos = Object.keys(ctx.query);
+        const isoFilter = [];
+        for (let i = 0, length = isos.length; i < length; i++) {
+            if (isos[i] !== 'filters') {
+                isoFilter.push({
+                    iso: isos[i],
+                    year: parseInt(ctx.query[isos[i]], 10)
+                });
+            }
+        }
+
+        const result = await indicatorService.downloadIndicator(ctx.params.indicatorId, isoFilter, ctx.query.filters);
+        ctx.body = result;
+    }
+
     static async getListIndicators(ctx) {
         logger.info('Obtaining indicators');
         ctx.body = Object.keys(indicators);
@@ -78,7 +94,8 @@ class IndicatorRouter {
 }
 
 router.get('/:indicatorId', IndicatorRouter.getIndicator);
-router.get('/:indicatorId/download', IndicatorRouter.downloadIndicator);
+router.get('/:indicatorId/expanded', IndicatorRouter.getExpandedIndicator);
+router.get('/:indicatorId/expanded/download', IndicatorRouter.downloadExpandedIndicator);
 router.get('/:country/:year', IndicatorRouter.getIndicatorsByCountryAndYear);
 router.get('/', IndicatorRouter.getListIndicators);
 
