@@ -37,7 +37,7 @@ class IndicatorRouter {
         };
     }
 
-    static async downloadIndicator(ctx) {
+    static async downloadExpandedIndicator(ctx) {
         const isos = Object.keys(ctx.query);
         const isoFilter = [];
         for (let i = 0, length = isos.length; i < length; i++) {
