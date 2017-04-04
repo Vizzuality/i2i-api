@@ -69,6 +69,8 @@ GET /api/v1/country?lastyear=true
 
 GET: /api/v1/country/:iso -> Return the country with iso of the param and all years for this country
 
+GET: /api/v1/country/:iso/download -> Download csv with all answers
+
 POST: /api/v1/country -> Save a new country and year. If the country already exist, only create this year for this country
 
 ```json
@@ -84,6 +86,18 @@ GET: /api/v1/indicator/:indicatorId -> Return the statistics for the indicator f
 
 
 Available filters as query params:
+
+| QueryParam   |      Description      |  Example |
+|----------|:-------------:|------|
+| filters |  Filter by several indicators with a set of values. The value should be a Array of objects | [{"indicatorId":"gender","value":["Female","Male"]},{"indicatorId":"access_to_resources","value":["Paraffin (Lantern)  ","Firewood  "]}] |
+| -- indicatorId |  Id of the indicator | 'gender' |
+| -- childIndicatorId |  Array of child Indicators ids (not required) | [2, 3] |
+| -- answerId |   Array of answers ids (not required) | [1, 2] |
+| -- value |  Array of values (required) | ["Paraffin (Lantern)  ","Firewood  "]|
+| iso-value |    Query param with key the iso of the country and value the year   |   ESP=2015 |
+
+GET: /api/v1/indicator/:indicatorId/download -> Download csv with the diferents answers of the indicator_id. You can filter by several countries and years
+
 
 | QueryParam   |      Description      |  Example |
 |----------|:-------------:|------|

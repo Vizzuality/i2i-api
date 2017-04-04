@@ -47,9 +47,6 @@ class IndicatorService {
 
 
     static getQueryRowIds(filters) {
-        const newFilter = [];
-        
-        const sql = 'SELECT row_id from answers where indicator_id = ? and value in (?)';
         
         let resultSql = '';
         for (let i = 0, length = filters.length; i < length; i++){
@@ -57,12 +54,12 @@ class IndicatorService {
                 indicator_id: filters[i].indicatorId,
                 value: filters[i].value
             };
-            if (filters[i].childIndicatorId){
+            if (filters[i].childIndicatorId) {
                 where.child_indicator_id = {
                     $in: filters[i].childIndicatorId
                 };
             }
-            if (filters[i].answerId){
+            if (filters[i].answerId) {
                 where.answer_id = {
                     $in: filters[i].answer_id
                 };
@@ -84,22 +81,53 @@ class IndicatorService {
         return resultSql;
     }
 
-    async getIndicator(indicatorId, isos, filter) {
-        logger.info('Get indicators');
-        const totals = {};
+    async downloadIndicator(indicatorId, isos, filter) {
+        logger.info('Get indicators for download');
         let where = {
             indicator_id: indicatorId
         };
-        if (filter) {
+        if (filter) {
             logger.debug('Filter by indicatorid', filter);
-            // let rowids = await IndicatorService.getRowIds(JSON.parse(filter));
-            let query = IndicatorService.getQueryRowIds(JSON.parse(filter));
+            const query = IndicatorService.getQueryRowIds(JSON.parse(filter));
             where.row_id = {
                 $in: sequelize.literal(`( ${query} )`)
             };
         }
         
         logger.debug(isos);
+        if (isos && Object.keys(isos).length > 0) {
+            const tuples = [];
+            for (let i = 0, length = isos.length; i < length; i++) {
+                tuples.push(Object.assign({}, isos[i]));
+            }
+            where = {
+                $and: [where, {
+                    $or: tuples
+                }]
+            };
+        }
+        return AnswerModel.findAll({
+            raw: true,
+            attributes: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value'],
+            where,
+            order: ['indicatorId']
+        });
+    }
+
+    async getIndicator(indicatorId, isos, filter) {
+        logger.info('Get indicators');
+        const totals = {};
+        let where = {
+            indicator_id: indicatorId
+        };
+        if (filter) {
+            logger.debug('Filter by indicatorid', filter);
+            const query = IndicatorService.getQueryRowIds(JSON.parse(filter));
+            where.row_id = {
+                $in: sequelize.literal(`( ${query} )`)
+            };
+        }
+
         if (isos && Object.keys(isos).length > 0) {
             const tuples = [];
             for (let i = 0, length = isos.length; i < length; i++) {
@@ -127,7 +155,7 @@ class IndicatorService {
             where,
             group: ['iso', 'year', 'row_id', 'weight']
         }).slice(0, -1);
-        
+
         const totalQuery = await sequelize.query(`
             select t.iso as iso, t.year as year, sum( t.weight) as sum 
             from (
