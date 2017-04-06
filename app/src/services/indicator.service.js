@@ -163,7 +163,7 @@ class IndicatorService {
             ) as t
             group by t.iso, t.year;
         `, { type: sequelize.QueryTypes.SELECT });
-        logger.debug('Totals obtained', totalQuery);
+        logger.info('Totals obtained', totalQuery);
         totalQuery.map((el) => {
             if (!totals[`${el.iso}-${el.year}`]) {
                 totals[`${el.iso}-${el.year}`] = 0;
