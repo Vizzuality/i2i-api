@@ -83,7 +83,10 @@ class IndicatorRouter {
         }
 
         const result = await indicatorService.downloadIndicator(ctx.params.indicatorId, isoFilter, ctx.query.filters);
-        ctx.body = result;
+        ctx.body = {
+            data: result,
+            title: indicators[ctx.params.indicatorId]
+        };
     }
 
     static async getListIndicators(ctx) {
