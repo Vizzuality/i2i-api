@@ -11,5 +11,6 @@
     "savings_strand": "Savings",
     "remittances_strand": "Send and receive money",
     "insurance_strand": "Insurance",
-    "credit_strand": "Credit"
+    "credit_strand": "Credit",
+    "total_strands": "Strands"
 }
