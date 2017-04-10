@@ -12,5 +12,9 @@
     "remittances_strand": "Send and receive money",
     "insurance_strand": "Insurance",
     "credit_strand": "Credit",
-    "total_strands": "Strands"
+    "total_fas_strand": "Financial Access Strands",
+    "total_saving_strand": "Saving Strands",
+    "total_remittances_strand": "Remittances Strands",
+    "total_insurance_strand": "Insurance Strands",
+    "total_credit_strand": "Credit Strands"
 }
