@@ -106,7 +106,7 @@ PATCH: /api/v1/country/:iso/:year -> Update data for that country and year.
 
 ### Indicator
 
-GET: /api/v1/indicator -> Return the statistics for the indicator list for this country and year. You can filter by several countries and years
+GET: /api/v1/indicator/table -> Return the statistics for the indicator list for this country and year. You can filter by several countries and years
 
 
 Available filters as query params:

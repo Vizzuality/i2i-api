@@ -153,7 +153,7 @@ class IndicatorService {
             if (!results[el.rowId]) {
                 results[el.rowId] = [];
             }
-            results[el.rowId] = el;
+            results[el.rowId].push(el);
             return el;
         });
         return results;
