@@ -114,6 +114,51 @@ class IndicatorService {
         });
     }
 
+    async getIndicators(indicators, isos, filter) {
+        logger.info('Get Indicators');
+        let where = {
+            indicator_id: {
+                $in: indicators
+            }
+        };
+        if (filter) {
+            logger.debug('Filter by ', filter);
+            const query = IndicatorService.getQueryRowIds(JSON.parse(filter));
+            where.row_id = {
+                $in: sequelize.literal(`( ${query} )`)
+            };
+        }
+
+        if (isos && Object.keys(isos).length > 0) {
+            const tuples = [];
+            for (let i = 0, length = isos.length; i < length; i++) {
+                tuples.push(Object.assign({}, isos[i]));
+            }
+            where = {
+                $and: [where, {
+                    $or: tuples
+                }]
+            };
+        }
+        logger.debug('where', where);
+        const resultQuery = await AnswerModel.findAll({
+            raw: true,
+            attributes: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value', 'rowId'],
+            where,
+            order: ['rowId', 'indicatorId']
+        });
+
+        const results = {};
+        resultQuery.map((el) => {
+            if (!results[el.rowId]) {
+                results[el.rowId] = [];
+            }
+            results[el.rowId] = el;
+            return el;
+        });
+        return results;
+    }
+
     async getIndicator(indicatorId, isos, filter) {
         logger.info('Get indicators');
         const totals = {};
@@ -121,7 +166,7 @@ class IndicatorService {
             indicator_id: indicatorId
         };
         if (filter) {
-            logger.debug('Filter by indicatorid', filter);
+            logger.debug('Filter by ', filter);
             const query = IndicatorService.getQueryRowIds(JSON.parse(filter));
             where.row_id = {
                 $in: sequelize.literal(`( ${query} )`)

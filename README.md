@@ -106,6 +106,21 @@ PATCH: /api/v1/country/:iso/:year -> Update data for that country and year.
 
 ### Indicator
 
+GET: /api/v1/indicator -> Return the statistics for the indicator list for this country and year. You can filter by several countries and years
+
+
+Available filters as query params:
+
+| QueryParam   |      Description      |  Example |
+|----------|:-------------:|------|
+| indicators | (required)list of indicators separated by comma | indicator1,indicator2 |
+| filters |  Filter by several indicators with a set of values. The value should be a Array of objects | [{"indicatorId":"gender","value":["Female","Male"]},{"indicatorId":"access_to_resources","value":["Paraffin (Lantern)  ","Firewood  "]}] |
+| -- indicatorId |  Id of the indicator | 'gender' |
+| -- childIndicatorId |  Array of child Indicators ids (not required) | [2, 3] |
+| -- answerId |   Array of answers ids (not required) | [1, 2] |
+| -- value |  Array of values (required) | ["Paraffin (Lantern)  ","Firewood  "]|
+| iso-value |    Query param with key the iso of the country and value the year   |   ESP=2015 |
+
 GET: /api/v1/indicator/:indicatorId -> Return the statistics for the indicator for this country and year. You can filter by several countries and years
 
 

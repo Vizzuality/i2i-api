@@ -94,8 +94,30 @@ class IndicatorRouter {
         ctx.body = Object.keys(indicators);
     }
 
+    static async getIndicators(ctx) {
+        ctx.assert(ctx.query.indicators, 400, 'Indicators is required');
+        const indicators = ctx.query.indicators.split(',');
+        const isos = Object.keys(ctx.query);
+        const isoFilter = [];
+        for (let i = 0, length = isos.length; i < length; i++) {
+            if (isos[i] !== 'filters') {
+                isoFilter.push({
+                    iso: isos[i],
+                    year: parseInt(ctx.query[isos[i]], 10)
+                });
+            }
+        }
+
+        const result = await indicatorService.getIndicators(indicators, isoFilter, ctx.query.filters);
+        ctx.body = {
+            data: result,
+            title: indicators[ctx.params.indicatorId]
+        };
+    }
+
 }
 
+router.get('/', IndicatorRouter.getIndicators);
 router.get('/:indicatorId', IndicatorRouter.getIndicator);
 router.get('/:indicatorId/expanded', IndicatorRouter.getExpandedIndicator);
 router.get('/:indicatorId/expanded/download', IndicatorRouter.downloadExpandedIndicator);
