@@ -117,7 +117,7 @@ class IndicatorRouter {
 
 }
 
-router.get('/', IndicatorRouter.getIndicators);
+router.get('/table', IndicatorRouter.getIndicators);
 router.get('/:indicatorId', IndicatorRouter.getIndicator);
 router.get('/:indicatorId/expanded', IndicatorRouter.getExpandedIndicator);
 router.get('/:indicatorId/expanded/download', IndicatorRouter.downloadExpandedIndicator);
