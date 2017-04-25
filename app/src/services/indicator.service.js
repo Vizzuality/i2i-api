@@ -186,7 +186,7 @@ class IndicatorService {
             };
         }
 
-        let resultQuery = sequelize.dialect.QueryGenerator.selectQuery('answer', {
+        let resultQuery = sequelize.dialect.QueryGenerator.selectQuery('answers', {
             raw: true,
             attributes: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value', sequelize.fn('SUM', sequelize.col('weight')), sequelize.fn('COUNT', sequelize.col('id'))],
             where,
