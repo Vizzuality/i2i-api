@@ -121,11 +121,12 @@ class IndicatorService {
                 $in: indicators
             }
         };
+        let withQuery = '';
         if (filter) {
             logger.debug('Filter by ', filter);
-            const query = IndicatorService.getQueryRowIds(JSON.parse(filter));
+            withQuery = `with p as (${IndicatorService.getQueryRowIds(JSON.parse(filter))})`;
             where.row_id = {
-                $in: sequelize.literal(`( ${query} )`)
+                $in: sequelize.literal(`(select row_id from p)`)
             };
         }
 
@@ -140,16 +141,23 @@ class IndicatorService {
                 }]
             };
         }
-        logger.debug('where', where);
-        const resultQuery = await AnswerModel.findAll({
+
+        let resultQuery = sequelize.dialect.QueryGenerator.selectQuery('answers', {
             raw: true,
-            attributes: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value', 'rowId'],
+            attributes: ['iso', 'year', ['indicator_id', 'indicatorId'], ['child_indicator_id', 'childIndicatorId'], ['answer_id', 'answerId'], 'value', sequelize.fn('SUM', sequelize.col('weight')), sequelize.fn('COUNT', sequelize.col('id'))],
             where,
-            order: ['rowId', 'indicatorId']
+            group: ['iso', 'year', 'indicator_id', 'child_indicator_id', 'answer_id', 'value'],
+            order: ['indicator_id']
         });
 
+        if (withQuery) {
+            resultQuery = `${withQuery} ${resultQuery}`;
+        }
+
+        const result = await await sequelize.query(resultQuery);
+
         const results = {};
-        resultQuery.map((el) => {
+        result[0].map((el) => {
             if (!results[el.rowId]) {
                 results[el.rowId] = [];
             }
