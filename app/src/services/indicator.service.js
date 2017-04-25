@@ -209,6 +209,7 @@ class IndicatorService {
         }).slice(0, -1);
 
         const totalQuery = await sequelize.query(`
+            ${withQuery}
             select t.iso as iso, t.year as year, sum( t.weight) as sum 
             from (
                 ${innerQuery}
