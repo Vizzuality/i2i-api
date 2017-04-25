@@ -165,11 +165,12 @@ class IndicatorService {
         let where = {
             indicator_id: indicatorId
         };
+        let withQuery = '';
         if (filter) {
             logger.debug('Filter by ', filter);
-            const query = IndicatorService.getQueryRowIds(JSON.parse(filter));
+            withQuery = `with p as (${IndicatorService.getQueryRowIds(JSON.parse(filter))})`;
             where.row_id = {
-                $in: sequelize.literal(`( ${query} )`)
+                $in: sequelize.literal(`select row_id from p`)
             };
         }
 
@@ -184,14 +185,20 @@ class IndicatorService {
                 }]
             };
         }
-        logger.debug('where', where);
-        const result = await AnswerModel.findAll({
+
+        let resultQuery = sequelize.dialect.QueryGenerator.selectQuery('answer', {
             raw: true,
             attributes: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value', sequelize.fn('SUM', sequelize.col('weight')), sequelize.fn('COUNT', sequelize.col('id'))],
             where,
             group: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value'],
             order: ['indicatorId']
         });
+
+        if (withQuery) {
+            resultQuery = `${withQuery} ${resultQuery}`;
+        }
+
+        const result = await await sequelize.query(resultQuery);
 
 
         logger.info('Obtaining totalss');
