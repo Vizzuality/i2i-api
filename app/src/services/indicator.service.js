@@ -170,7 +170,7 @@ class IndicatorService {
             logger.debug('Filter by ', filter);
             withQuery = `with p as (${IndicatorService.getQueryRowIds(JSON.parse(filter))})`;
             where.row_id = {
-                $in: sequelize.literal(`select row_id from p`)
+                $in: sequelize.literal(`(select row_id from p)`)
             };
         }
 
