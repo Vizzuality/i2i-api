@@ -188,10 +188,10 @@ class IndicatorService {
 
         let resultQuery = sequelize.dialect.QueryGenerator.selectQuery('answers', {
             raw: true,
-            attributes: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value', sequelize.fn('SUM', sequelize.col('weight')), sequelize.fn('COUNT', sequelize.col('id'))],
+            attributes: ['iso', 'year', 'indicator_id', 'child_indicator_id', 'answer_id', 'value', sequelize.fn('SUM', sequelize.col('weight')), sequelize.fn('COUNT', sequelize.col('id'))],
             where,
-            group: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value'],
-            order: ['indicatorId']
+            group: ['iso', 'year', 'indicator_id', 'child_indicator_id', 'answer_id', 'value'],
+            order: ['indicator_id']
         });
 
         if (withQuery) {
