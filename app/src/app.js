@@ -44,6 +44,15 @@ app.use(async(ctx, next) => {
 });
 
 app.use(koaLogger());
+const cache = require('memory-cache');
+
+app.use(require('koa-cash')({
+    maxAge: 24 * 60 * 60 * 1000,
+    get: key => cache.get(key),
+    set: (key, value) => {
+        cache.put(key, value, 24 * 60 * 60 * 1000);
+    }
+}));
 
 loader.loadRoutes(app);
 

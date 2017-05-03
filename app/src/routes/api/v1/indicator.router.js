@@ -116,13 +116,20 @@ class IndicatorRouter {
     }
 
 }
+const cached = async (ctx, next) => {
+    if (await ctx.cashed()) {
+        return;
+    }
+    await next();
+};
 
-router.get('/table', IndicatorRouter.getIndicators);
-router.get('/:indicatorId', IndicatorRouter.getIndicator);
-router.get('/:indicatorId/expanded', IndicatorRouter.getExpandedIndicator);
-router.get('/:indicatorId/expanded/download', IndicatorRouter.downloadExpandedIndicator);
-router.get('/:country/:year', IndicatorRouter.getIndicatorsByCountryAndYear);
-router.get('/', IndicatorRouter.getListIndicators);
+
+router.get('/table', cached, IndicatorRouter.getIndicators);
+router.get('/:indicatorId', cached, IndicatorRouter.getIndicator);
+router.get('/:indicatorId/expanded', cached, IndicatorRouter.getExpandedIndicator);
+router.get('/:indicatorId/expanded/download', cached, IndicatorRouter.downloadExpandedIndicator);
+router.get('/:country/:year', cached, IndicatorRouter.getIndicatorsByCountryAndYear);
+router.get('/', cached, IndicatorRouter.getListIndicators);
 
 
 module.exports = router;

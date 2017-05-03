@@ -251,14 +251,21 @@ async function checkExists(ctx, next) {
     await next();
 }
 
-router.get('/', CountryRouter.get);
+const cached = async (ctx, next) => {
+    if (await ctx.cashed()) {
+        return;
+    }
+    await next();
+};
+
+router.get('/', cached, CountryRouter.get);
 router.post('/', GeneralValidator.create, checkExists, CountryRouter.create);
-router.get('/:iso', CountryRouter.getByIso);
+router.get('/:iso', cached, CountryRouter.getByIso);
 router.patch('/:iso', CountryRouter.updateCountry);
-router.get('/:iso/:year', CountryRouter.getByIsoAndYear);
+router.get('/:iso/:year', cached, CountryRouter.getByIsoAndYear);
 router.patch('/:iso/:year', CountryRouter.updateIsoAndYear);
 router.post('/:iso/:year/dataset', checkExists, GeneralValidator.uploadDataset, CountryRouter.uploadDataset);
-router.get('/:iso/:year/download', CountryRouter.downloadDataset);
+router.get('/:iso/:year/download', cached, CountryRouter.downloadDataset);
 
 
 
