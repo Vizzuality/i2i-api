@@ -16,5 +16,6 @@
         "database": null,
         "host": null,
         "port": null
-    }
+    },
+    "cache": "yes"
 }

@@ -1,4 +1,5 @@
 const Router = require('koa-router');
+const config = require('config');
 const indicatorService = require('services/indicator.service');
 const indicators = require('data/indicators.json');
 const logger = require('logger');
@@ -116,13 +117,16 @@ class IndicatorRouter {
     }
 
 }
+
 const cached = async (ctx, next) => {
-    if (await ctx.cashed()) {
-        return;
+    if (config.get('cache') === 'yes') {
+        if (await ctx.cashed()) {
+            logger.info('Request cached');
+            return;
+        }
     }
     await next();
 };
-
 
 router.get('/table', cached, IndicatorRouter.getIndicators);
 router.get('/:indicatorId', cached, IndicatorRouter.getIndicator);

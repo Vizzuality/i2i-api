@@ -1,4 +1,5 @@
 const logger = require('logger');
+const config = require('config');
 const Router = require('koa-router');
 const GeneralValidator = require('validators/general.validator');
 const LoadDatasetService = require('services/load-dataset.service');
@@ -252,8 +253,11 @@ async function checkExists(ctx, next) {
 }
 
 const cached = async (ctx, next) => {
-    if (await ctx.cashed()) {
-        return;
+    if (config.get('cache') === 'yes') {
+        if (await ctx.cashed()) {
+            logger.info('Request cached');
+            return;
+        }
     }
     await next();
 };
