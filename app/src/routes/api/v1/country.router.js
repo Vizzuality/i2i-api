@@ -264,7 +264,7 @@ const cached = async (ctx, next) => {
 
 router.get('/', cached, CountryRouter.get);
 router.post('/', GeneralValidator.create, checkExists, CountryRouter.create);
-router.get('/:iso', CountryRouter.getByIso);
+router.get('/:iso', cached, CountryRouter.getByIso);
 router.patch('/:iso', CountryRouter.updateCountry);
 router.get('/:iso/:year', cached, CountryRouter.getByIsoAndYear);
 router.patch('/:iso/:year', CountryRouter.updateIsoAndYear);
