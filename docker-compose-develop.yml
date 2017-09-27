@@ -4,10 +4,6 @@ develop:
     service: base
   ports:
     - "35739:35729"
-  environment:
-    CT_URL: http://mymachine:9000 
-    LOCAL_URL: http://mymachine:3005
-    CT_TOKEN: null
   command: develop
   volumes:
     - ./app:/opt/i2i/app
@@ -15,6 +11,7 @@ develop:
     - postgres
 postgres:
   image: postgres:9.6
+  container_name: i2i-api-postgres
   environment: 
     POSTGRES_PASSWORD: root
     POSTGRES_USER: root

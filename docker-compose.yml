@@ -1,13 +1,10 @@
 prod:
-  image: vizzuality/i2i:1.0.0${STAGING}
+  extends:
+    file: base.yml
+    service: base
   ports:
-    - "3005"
+    - "4000:3000"
   env_file:
     - prod.env
   command: start
-  dns: ${DNS_SERVER}
   restart: always
-  log_driver: "syslog"
-  log_opt:
-      syslog-address: ${SYSLOG_ADDRESS}
-      tag: i2i${STAGING}

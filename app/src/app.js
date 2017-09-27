@@ -5,6 +5,9 @@ const config = require('config');
 const loader = require('loader');
 const convert = require('koa-convert');
 const ErrorSerializer = require('serializers/error.serializer');
+const models = require('models');
+const cors = require('kcors');
+const validate = require('koa-validate');
 
 const koaBody = require('koa-body')({
     multipart: true,
@@ -15,11 +18,11 @@ const koaBody = require('koa-body')({
 
 
 const app = new Koa();
-
-
+app.use(cors());
+validate(app);
 app.use(convert(koaBody));
 
-app.use(async (ctx, next) => {
+app.use(async(ctx, next) => {
     try {
         await next();
     } catch (err) {
@@ -41,12 +44,27 @@ app.use(async (ctx, next) => {
 });
 
 app.use(koaLogger());
+const cache = require('memory-cache');
+
+app.use(require('koa-cash')({
+    maxAge: 24 * 60 * 60 * 1000,
+    get: key => cache.get(key),
+    set: (key, value) => {
+        cache.put(key, value, 24 * 60 * 60 * 1000);
+    }
+}));
 
 loader.loadRoutes(app);
 
-
-const instance = app.listen(process.env.PORT, () => {
+models.sequelize.sync({
+    force: config.get('database.force')
+}).then(() => {}, (err) => {
+    logger.error(err);
+    process.exit(1);
 });
+
+const instance = app.listen(process.env.PORT, () => {});
+instance.setTimeout(10 * 60 * 1000);
 logger.info('Server started in ', process.env.PORT);
 
 

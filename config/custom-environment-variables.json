@@ -1,5 +1,13 @@
 {
     "service": {
         "port": "PORT"
-    }
+    },
+    "database": {
+        "user": "I2I_API_POSTGRES_ENV_POSTGRES_USER",
+        "password": "I2I_API_POSTGRES_ENV_POSTGRES_PASSWORD",
+        "database": "I2I_API_POSTGRES_ENV_POSTGRES_DB",
+        "host": "POSTGRES_PORT_5432_TCP_ADDR",
+        "port": "POSTGRES_PORT_5432_TCP_PORT"
+    },
+    "cache": "CACHE_ENABLE"
 }

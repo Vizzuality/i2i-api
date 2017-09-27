@@ -1,7 +1,7 @@
 {
     "logger": {
         "name": "i2i",
-        "level": "debug",
+        "level": "info",
         "toFile": false,
         "dirLogFile": null
     }
