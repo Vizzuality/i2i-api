@@ -44,7 +44,7 @@ app.use(async(ctx, next) => {
 });
 
 app.use(koaLogger());
-const cache = require('memory-cache');
+const cache = require('cache');
 
 app.use(require('koa-cash')({
     maxAge: 24 * 60 * 60 * 1000,
