@@ -8,6 +8,7 @@ const Country4YearModel = require('models').country4year;
 const OriginalAnswerModel = require('models').originalAnswer;
 const json2csv = require('json2csv');
 const passThrough = require('stream').PassThrough;
+const cache = require('cache');
 
 const router = new Router({
     prefix: '/country',
@@ -151,6 +152,7 @@ class CountryRouter {
         ctx.body = {
             ok: 1
         };
+        cache.clear();
     }
 
     static async downloadDataset(ctx) {
