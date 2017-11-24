@@ -12,7 +12,7 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.DOUBLE,
             allowNull: true
         },
-        data_url: {
+        dataUrl: {
             type: DataTypes.STRING,
             allowNull: true
         }
