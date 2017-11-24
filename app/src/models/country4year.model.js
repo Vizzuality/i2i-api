@@ -11,6 +11,10 @@ module.exports = function (sequelize, DataTypes) {
         total: {
             type: DataTypes.DOUBLE,
             allowNull: true
+        },
+        dataUrl: {
+            type: DataTypes.STRING,
+            allowNull: true
         }
     }, {
         classMethods: {
