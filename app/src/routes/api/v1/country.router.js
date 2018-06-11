@@ -9,6 +9,7 @@ const OriginalAnswerModel = require('models').originalAnswer;
 const json2csv = require('json2csv');
 const passThrough = require('stream').PassThrough;
 const cache = require('cache');
+const auth = require('security');
 
 const router = new Router({
     prefix: '/country',
@@ -119,7 +120,8 @@ class CountryRouter {
         await Country4YearModel.create({
             countryId: exists.id,
             year: ctx.request.body.year,
-            total: ctx.request.body.total
+            total: ctx.request.body.total,
+            dataUrl: ctx.request.body.dataUrl
         });
         const data = await CountryModel.findAll({
             where: {
@@ -198,6 +200,9 @@ class CountryRouter {
         if (ctx.request.body.total) {
             updateObj.total = ctx.request.body.total;
         }
+        if (ctx.request.body.dataUrl) {
+            updateObj.dataUrl = ctx.request.body.dataUrl;
+        }
         await Country4YearModel.update(updateObj, {
             where: {
                 countryId: country[0].id,
@@ -265,12 +270,12 @@ const cached = async (ctx, next) => {
 };
 
 router.get('/', cached, CountryRouter.get);
-router.post('/', GeneralValidator.create, checkExists, CountryRouter.create);
+router.post('/', auth, GeneralValidator.create, checkExists, CountryRouter.create);
 router.get('/:iso', cached, CountryRouter.getByIso);
-router.patch('/:iso', CountryRouter.updateCountry);
+router.patch('/:iso', auth, CountryRouter.updateCountry);
 router.get('/:iso/:year', cached, CountryRouter.getByIsoAndYear);
-router.patch('/:iso/:year', CountryRouter.updateIsoAndYear);
-router.post('/:iso/:year/dataset', checkExists, GeneralValidator.uploadDataset, CountryRouter.uploadDataset);
+router.patch('/:iso/:year', auth, CountryRouter.updateIsoAndYear);
+router.post('/:iso/:year/dataset', auth, checkExists, GeneralValidator.uploadDataset, CountryRouter.uploadDataset);
 router.get('/:iso/:year/download', cached, CountryRouter.downloadDataset);
 
 

@@ -17,5 +17,9 @@
         "host": null,
         "port": null
     },
-    "cache": "yes"
+    "cache": "yes",
+    "auth": {
+        "username": null,
+        "password": null
+    }
 }

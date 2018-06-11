@@ -9,5 +9,9 @@
         "host": "POSTGRES_PORT_5432_TCP_ADDR",
         "port": "POSTGRES_PORT_5432_TCP_PORT"
     },
-    "cache": "CACHE_ENABLE"
+    "cache": "CACHE_ENABLE",
+    "auth": {
+        "username": "AUTH_USERNAME",
+        "password": "AUTH_PASSWORD"
+    }
 }

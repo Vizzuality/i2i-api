@@ -9,6 +9,9 @@ develop:
     - ./app:/opt/i2i/app
   links: 
     - postgres
+  environment:
+    AUTH_USERNAME: admin
+    AUTH_PASSWORD: admin
 postgres:
   image: postgres:9.6
   container_name: i2i-api-postgres

@@ -46,6 +46,20 @@ app.use(async(ctx, next) => {
 app.use(koaLogger());
 const cache = require('cache');
 
+app.use(async (ctx, next) => {
+    try {
+      await next();
+    } catch (err) {
+      if (401 == err.status) {
+        ctx.status = 401;
+        ctx.set('WWW-Authenticate', 'Basic');
+        ctx.body = 'Not authenticated';
+      } else {
+        throw err;
+      }
+    }
+  });
+
 app.use(require('koa-cash')({
     maxAge: 24 * 60 * 60 * 1000,
     get: key => cache.get(key),
