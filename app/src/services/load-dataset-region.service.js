@@ -1,10 +1,10 @@
 const logger = require('logger');
 const fs = require('fs');
 const csv = require('fast-csv');
-const CountryModel = require('models').country;
-const Country4YearModel = require('models').country4year;
-const AnswerModel = require('models').answer;
-const OriginalAnswerModel = require('models').originalAnswer;
+const RegionModel = require('models').region;
+const Region4YearModel = require('models').region4year;
+const AnswerModel = require('models').answerRegion;
+const OriginalAnswerModel = require('models').originalAnswerRegion;
 
 function* generateId() {
     let id = 0;
@@ -28,12 +28,12 @@ class LoadDatasetService {
         logger.debug('Removing old data');
         await AnswerModel.destroy({
             where: {
-                country4yearId: this.country4yearId
+                region4yearId: this.region4yearId
             }
         });
         await OriginalAnswerModel.destroy({
             where: {
-                country4yearId: this.country4yearId
+                region4yearId: this.region4yearId
             }
         });
     }
@@ -44,7 +44,7 @@ class LoadDatasetService {
             answer: data,
             year: this.year,
             iso: this.iso,
-            country4yearId: this.country4yearId
+            region4yearId: this.region4yearId
         });
         return answer.id;
     }
@@ -61,7 +61,7 @@ class LoadDatasetService {
                 childIndicatorId: col.childIndicatorId,
                 answerId: col.answerId,
                 indicatorId: col.indicatorId,
-                country4yearId: this.country4yearId,
+                region4yearId: this.region4yearId,
                 weight: parseFloat(data[this.weightColumn]),
                 value: data[this.columns[i]] ? data[this.columns[i]].trim() : ''
             });
@@ -98,21 +98,21 @@ class LoadDatasetService {
     }
 
     async start() {
-        this.country4year = await Country4YearModel.findAll({
+        this.region4year = await Region4YearModel.findAll({
             where: {
                 year: this.year
             },
             include: [{
-                model: CountryModel,
+                model: RegionModel,
                 where: {
                     iso: this.iso
                 }
             }]
         });
-        if (!this.country4year || this.country4year.length === 0) {
-            throw new Error('Country and year not found');
+        if (!this.region4year || this.region4year.length === 0) {
+            throw new Error('Region and year not found');
         }
-        this.country4yearId = this.country4year[0].id;
+        this.region4yearId = this.region4year[0].id;
         await this.removeOldData();
         await this.readCSV();
         logger.info('Finished successfully');

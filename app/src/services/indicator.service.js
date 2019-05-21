@@ -25,7 +25,7 @@ class IndicatorService {
             return el;
         });
     }
-    
+
     static async getTotal(iso, year) {
         const total = await Country4YearModel.findAll({
             attributes: ['total'],
@@ -46,10 +46,9 @@ class IndicatorService {
     }
 
 
-    static getQueryRowIds(filters) {
-        
+    static getQueryRowIds(filters) {
         let resultSql = '';
-        for (let i = 0, length = filters.length; i < length; i++){
+        for (let i = 0, length = filters.length; i < length; i++) {
             const where = {
                 indicator_id: filters[i].indicatorId,
                 value: filters[i].value
@@ -93,7 +92,7 @@ class IndicatorService {
                 $in: sequelize.literal(`( ${query} )`)
             };
         }
-        
+
         logger.debug(isos);
         if (isos && Object.keys(isos).length > 0) {
             const tuples = [];
