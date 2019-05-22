@@ -1,5 +1,13 @@
 {
-    "database": {
-        
-    }
+  "database": {
+    "user": "postgres",
+    "password": "",
+    "database": "i2i_api_dev",
+    "host": "127.0.0.1",
+    "port": 5432
+  },
+  "auth": {
+    "username": "vizzuality",
+    "password": "AlejoPower27"
+  }
 }

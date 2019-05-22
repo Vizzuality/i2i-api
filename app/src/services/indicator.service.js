@@ -1,7 +1,10 @@
 const logger = require('logger');
 const AnswerModel = require('models').answer;
+const AnswerRegionModel = require('models').answerRegion;
 const Country4YearModel = require('models').country4year;
+const Region4YearModel = require('models').region4year;
 const CountryModel = require('models').country;
+const RegionModel = require('models').region;
 const sequelize = require('models').sequelize;
 
 
@@ -10,6 +13,25 @@ class IndicatorService {
     async getIndicatorsByCountryAndYear(iso, year) {
         const total = await IndicatorService.getTotal(iso, year);
         const result = await AnswerModel.findAll({
+            raw: true,
+            attributes: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value', sequelize.fn('SUM', sequelize.col('weight')), sequelize.fn('COUNT', sequelize.col('id'))],
+            where: {
+                year: parseInt(year, 10),
+                iso
+            },
+            group: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value'],
+            order: ['indicatorId']
+        });
+        return result.map((el) => {
+            el.percentage = (el.sum / total) * 100;
+            el.count = parseInt(el.count, 10);
+            return el;
+        });
+    }
+
+    async getIndicatorsByRegionAndYear(iso, year) {
+        const total = await IndicatorService.getTotal(iso, year);
+        const result = await AnswerRegionModel.findAll({
             raw: true,
             attributes: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value', sequelize.fn('SUM', sequelize.col('weight')), sequelize.fn('COUNT', sequelize.col('id'))],
             where: {
@@ -45,6 +67,24 @@ class IndicatorService {
         return null;
     }
 
+    static async getTotalRegion(iso, year) {
+        const total = await Region4YearModel.findAll({
+            attributes: ['total'],
+            where: {
+                year
+            },
+            include: [{
+                model: RegionModel,
+                where: {
+                    iso
+                }
+            }]
+        });
+        if (total && total.length === 1) {
+            return total[0].total;
+        }
+        return null;
+    }
 
     static getQueryRowIds(filters) {
         let resultSql = '';
@@ -70,6 +110,7 @@ class IndicatorService {
                     where
                 }).slice(0, -1);
             } else {
+                // eslint-disable-next-line prefer-template
                 resultSql += ' INTERSECT ' + sequelize.dialect.QueryGenerator.selectQuery('answers', {
                     attributes: ['row_id'],
                     where

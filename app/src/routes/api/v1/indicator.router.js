@@ -13,7 +13,22 @@ const router = new Router({
 class IndicatorRouter {
 
     static async getIndicatorsByCountryAndYear(ctx) {
-        const result = await indicatorService.getIndicatorsByCountryAndYear(ctx.params.country, ctx.params.year, ctx.query.where);
+        const result = await indicatorService.getIndicatorsByCountryAndYear(
+            ctx.params.country,
+            ctx.params.year,
+            ctx.query.where
+        );
+        ctx.body = {
+            data: result
+        };
+    }
+
+    static async getIndicatorsByRegionAndYear(ctx) {
+        const result = await indicatorService.getIndicatorsByRegionAndYear(
+            ctx.params.region,
+            ctx.params.year,
+            ctx.query.where
+        );
         ctx.body = {
             data: result
         };
@@ -133,6 +148,7 @@ router.get('/:indicatorId', cached, IndicatorRouter.getIndicator);
 router.get('/:indicatorId/expanded', cached, IndicatorRouter.getExpandedIndicator);
 router.get('/:indicatorId/expanded/download', cached, IndicatorRouter.downloadExpandedIndicator);
 router.get('/:country/:year', cached, IndicatorRouter.getIndicatorsByCountryAndYear);
+router.get('/region/:region/:year', cached, IndicatorRouter.getIndicatorsByRegionAndYear);
 router.get('/', cached, IndicatorRouter.getListIndicators);
 
 
