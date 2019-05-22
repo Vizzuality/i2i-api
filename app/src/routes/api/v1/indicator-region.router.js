@@ -1,20 +1,20 @@
 const Router = require('koa-router');
 const config = require('config');
-const indicatorService = require('services/indicator.service');
+const indicatorService = require('services/indicator-region.service');
 const indicators = require('data/indicators.json');
 const logger = require('logger');
 const json2csv = require('json2csv');
 const passThrough = require('stream').PassThrough;
 
 const router = new Router({
-    prefix: '/indicator',
+    prefix: '/indicator-region',
 });
 
 class IndicatorRouter {
 
-    static async getIndicatorsByCountryAndYear(ctx) {
-        const result = await indicatorService.getIndicatorsByCountryAndYear(
-            ctx.params.country,
+    static async getIndicatorsByRegionAndYear(ctx) {
+        const result = await indicatorService.getIndicatorsByRegionAndYear(
+            ctx.params.region,
             ctx.params.year,
             ctx.query.where
         );
@@ -136,7 +136,7 @@ router.get('/table', cached, IndicatorRouter.getIndicators);
 router.get('/:indicatorId', cached, IndicatorRouter.getIndicator);
 router.get('/:indicatorId/expanded', cached, IndicatorRouter.getExpandedIndicator);
 router.get('/:indicatorId/expanded/download', cached, IndicatorRouter.downloadExpandedIndicator);
-router.get('/:country/:year', cached, IndicatorRouter.getIndicatorsByCountryAndYear);
+router.get('/:region/:year', cached, IndicatorRouter.getIndicatorsByRegionAndYear);
 router.get('/', cached, IndicatorRouter.getListIndicators);
 
 
