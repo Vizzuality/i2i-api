@@ -63,13 +63,13 @@ class IndicatorRegionService {
             }
 
             if (i === 0) {
-                resultSql += sequelize.dialect.QueryGenerator.selectQuery('answerRegions', {
+                resultSql += sequelize.dialect.QueryGenerator.selectQuery('answer_region', {
                     attributes: ['row_id'],
                     where
                 }).slice(0, -1);
             } else {
                 // eslint-disable-next-line prefer-template
-                resultSql += ' INTERSECT ' + sequelize.dialect.QueryGenerator.selectQuery('answerRegions', {
+                resultSql += ' INTERSECT ' + sequelize.dialect.QueryGenerator.selectQuery('answer_region', {
                     attributes: ['row_id'],
                     where
                 }).slice(0, -1);
@@ -140,7 +140,7 @@ class IndicatorRegionService {
             };
         }
 
-        let resultQuery = sequelize.dialect.QueryGenerator.selectQuery('answerRegions', {
+        let resultQuery = sequelize.dialect.QueryGenerator.selectQuery('answer_region', {
             raw: true,
             attributes: ['iso', 'year', ['indicator_id', 'indicatorId'], ['child_indicator_id', 'childIndicatorId'], ['answer_id', 'answerId'], 'value', sequelize.fn('SUM', sequelize.col('weight')), sequelize.fn('COUNT', sequelize.col('id'))],
             where,
@@ -192,7 +192,7 @@ class IndicatorRegionService {
             };
         }
 
-        let resultQuery = sequelize.dialect.QueryGenerator.selectQuery('answerRegions', {
+        let resultQuery = sequelize.dialect.QueryGenerator.selectQuery('answer_region', {
             raw: true,
             attributes: ['iso', 'year', ['indicator_id', 'indicatorId'], ['child_indicator_id', 'childIndicatorId'], ['answer_id', 'answerId'], 'value', sequelize.fn('SUM', sequelize.col('weight')), sequelize.fn('COUNT', sequelize.col('id'))],
             where,
@@ -208,7 +208,7 @@ class IndicatorRegionService {
 
 
         logger.info('Obtaining totalss');
-        const innerQuery = sequelize.dialect.QueryGenerator.selectQuery('answerRegions', {
+        const innerQuery = sequelize.dialect.QueryGenerator.selectQuery('answer_region', {
             attributes: ['iso', 'year', 'row_id', 'weight'],
             where,
             group: ['iso', 'year', 'row_id', 'weight']
