@@ -25,8 +25,8 @@ module.exports = (sequelize, DataTypes) => {
                         allowNull: false
                     }
                 });
-                region4year.hasMany(models.answer);
-                region4year.hasMany(models.originalAnswer);
+                region4year.hasMany(models.answerRegion);
+                region4year.hasMany(models.originalAnswerRegion);
             }
         }
     });

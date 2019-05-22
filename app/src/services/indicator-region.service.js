@@ -4,10 +4,10 @@ const Region4YearModel = require('models').region4year;
 const RegionModel = require('models').region;
 const sequelize = require('models').sequelize;
 
-class IndicatorService {
+class IndicatorRegionService {
 
     async getIndicatorsByRegionAndYear(iso, year) {
-        const total = await IndicatorService.getTotal(iso, year);
+        const total = await IndicatorRegionService.getTotal(iso, year);
         const result = await AnswerRegionModel.findAll({
             raw: true,
             attributes: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value', sequelize.fn('SUM', sequelize.col('weight')), sequelize.fn('COUNT', sequelize.col('id'))],
@@ -63,13 +63,13 @@ class IndicatorService {
             }
 
             if (i === 0) {
-                resultSql += sequelize.dialect.QueryGenerator.selectQuery('answers', {
+                resultSql += sequelize.dialect.QueryGenerator.selectQuery('answerRegions', {
                     attributes: ['row_id'],
                     where
                 }).slice(0, -1);
             } else {
                 // eslint-disable-next-line prefer-template
-                resultSql += ' INTERSECT ' + sequelize.dialect.QueryGenerator.selectQuery('answers', {
+                resultSql += ' INTERSECT ' + sequelize.dialect.QueryGenerator.selectQuery('answerRegions', {
                     attributes: ['row_id'],
                     where
                 }).slice(0, -1);
@@ -86,7 +86,7 @@ class IndicatorService {
         };
         if (filter) {
             logger.debug('Filter by indicatorid', filter);
-            const query = IndicatorService.getQueryRowIds(JSON.parse(filter));
+            const query = IndicatorRegionService.getQueryRowIds(JSON.parse(filter));
             where.row_id = {
                 $in: sequelize.literal(`( ${query} )`)
             };
@@ -122,7 +122,7 @@ class IndicatorService {
         let withQuery = '';
         if (filter) {
             logger.debug('Filter by ', filter);
-            withQuery = `with p as (${IndicatorService.getQueryRowIds(JSON.parse(filter))})`;
+            withQuery = `with p as (${IndicatorRegionService.getQueryRowIds(JSON.parse(filter))})`;
             where.row_id = {
                 $in: sequelize.literal(`(select row_id from p)`)
             };
@@ -140,7 +140,7 @@ class IndicatorService {
             };
         }
 
-        let resultQuery = sequelize.dialect.QueryGenerator.selectQuery('answers', {
+        let resultQuery = sequelize.dialect.QueryGenerator.selectQuery('answerRegions', {
             raw: true,
             attributes: ['iso', 'year', ['indicator_id', 'indicatorId'], ['child_indicator_id', 'childIndicatorId'], ['answer_id', 'answerId'], 'value', sequelize.fn('SUM', sequelize.col('weight')), sequelize.fn('COUNT', sequelize.col('id'))],
             where,
@@ -174,7 +174,7 @@ class IndicatorService {
         let withQuery = '';
         if (filter) {
             logger.debug('Filter by ', filter);
-            withQuery = `with p as (${IndicatorService.getQueryRowIds(JSON.parse(filter))})`;
+            withQuery = `with p as (${IndicatorRegionService.getQueryRowIds(JSON.parse(filter))})`;
             where.row_id = {
                 $in: sequelize.literal(`(select row_id from p)`)
             };
@@ -192,7 +192,7 @@ class IndicatorService {
             };
         }
 
-        let resultQuery = sequelize.dialect.QueryGenerator.selectQuery('answers', {
+        let resultQuery = sequelize.dialect.QueryGenerator.selectQuery('answerRegions', {
             raw: true,
             attributes: ['iso', 'year', ['indicator_id', 'indicatorId'], ['child_indicator_id', 'childIndicatorId'], ['answer_id', 'answerId'], 'value', sequelize.fn('SUM', sequelize.col('weight')), sequelize.fn('COUNT', sequelize.col('id'))],
             where,
@@ -208,7 +208,7 @@ class IndicatorService {
 
 
         logger.info('Obtaining totalss');
-        const innerQuery = sequelize.dialect.QueryGenerator.selectQuery('answers', {
+        const innerQuery = sequelize.dialect.QueryGenerator.selectQuery('answerRegions', {
             attributes: ['iso', 'year', 'row_id', 'weight'],
             where,
             group: ['iso', 'year', 'row_id', 'weight']
@@ -242,4 +242,4 @@ class IndicatorService {
 
 }
 
-module.exports = new IndicatorService();
+module.exports = new IndicatorRegionService();
