@@ -1,5 +1,4 @@
 const logger = require('logger');
-const AnswerModel = require('models').answer;
 const AnswerRegionModel = require('models').answerRegion;
 const Region4YearModel = require('models').region4year;
 const RegionModel = require('models').region;
@@ -105,7 +104,7 @@ class IndicatorService {
                 }]
             };
         }
-        return AnswerModel.findAll({
+        return AnswerRegionModel.findAll({
             raw: true,
             attributes: ['iso', 'year', 'row_id', 'indicatorId', 'childIndicatorId', 'answerId', 'value', 'weight'],
             where,
