@@ -81,15 +81,18 @@ PATCH: /api/v1/country/:iso -> Update data for that country
 {
 	"mapUrl": "http://link"
 }
+```
 
-POST: /api/v1/country -> Save a new country and year. If the country already exist, only create this year for this country
+POST: /api/v1/country -> Saves the country and year, if the country doesn't exist in the database yet.
+
+*NOTE* This endpoint is authenticated (using Basic Auth with user and password)
 
 ```json
 {
 	"name": "España",
 	"iso": "esp",
 	"year": 2017,
-	"total": 20000.2 // total of poblation
+	"total": 20000.2 // population total
 }
 
 ```

@@ -5,7 +5,7 @@ class GeneralValidators {
         ctx.checkBody('iso').notEmpty();
         ctx.checkBody('year').isInt().toInt(10);
         ctx.checkBody('total').isFloat().toFloat();
-        
+
         if (ctx.errors && ctx.errors.length > 0) {
             ctx.body = {
                 errors: ctx.errors

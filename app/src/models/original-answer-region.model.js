@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const originalAnswer = sequelize.define('originalAnswer', {
+    const originalAnswer = sequelize.define('originalAnswerRegion', {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
@@ -18,10 +18,10 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         }
     }, {
-        tableName: 'original_answer',
+        tableName: 'original_answer_region',
         classMethods: {
             associate: (models) => {
-                originalAnswer.belongsTo(models.country4year, {
+                originalAnswer.belongsTo(models.region4year, {
                     onDelete: 'CASCADE',
                     foreignKey: {
                         allowNull: false
