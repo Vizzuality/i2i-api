@@ -23,7 +23,7 @@ set :deploy_to, '/var/www/i2i-api'
 
 # Default value for :linked_files is []
 # append :linked_files, "config/database.yml"
-set :linked_files, %w{.env ecosystem.config.js}
+set :linked_files, %w{.env}
 
 # Default value for linked_dirs is []
 # append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"
@@ -57,27 +57,5 @@ set :yarn_flags, '--silent --no-progress'
 set :yarn_env_variables, { 'NODE_OPTIONS': '--max-old-space-size=2048' }
 
 namespace :deploy do
-
-  # desc 'Build'
-  # task :build_app do
-  #   on roles(:app) do
-  #     within release_path do
-  #       execute :npm, 'run build', '-- --max-old-space-size=2048'
-  #       # execute :yarn, 'build'
-  #     end
-  #   end
-  # end
-
-  desc 'Restart application'
-  task :restart do
-    on roles(:app) do
-      within release_path do
-        invoke 'pm2:delete'
-        invoke 'pm2:start'
-      end
-    end
-  end
-
-  # after :updated, :build_app
-  after :publishing, :restart
+  after 'deploy:published', 'nginx:restart'
 end
