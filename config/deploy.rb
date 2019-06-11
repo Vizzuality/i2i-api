@@ -44,18 +44,3 @@ set :keep_releases, 2
 # RVM
 # set :rvm_ruby_version, '2.2.1'
 set :rvm_custom_path, '/usr/share/rvm'
-
-# PM2
-set :pm2_app_command, 'ecosystem.config.js'
-set :pm2_app_name, 'i2iapi'
-set :pm2_start_params, '--env production'
-
-# Yarn
-# set :yarn_target_path, -> { release_path.join('subdir') } # default not set
-set :yarn_flags, '--silent --no-progress'
-# set :yarn_roles, :all                                     # default
-set :yarn_env_variables, { 'NODE_OPTIONS': '--max-old-space-size=2048' }
-
-namespace :deploy do
-  after 'deploy:published', 'nginx:restart'
-end

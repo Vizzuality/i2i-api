@@ -4,5 +4,5 @@ ruby '2.5.3'
 
 gem 'capistrano', '3.4'
 gem 'capistrano-rvm'
-gem 'capistrano-nginx'
+gem 'capistrano-passenger'
 gem 'capistrano-npm'
