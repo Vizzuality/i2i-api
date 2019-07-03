@@ -54,6 +54,7 @@ class LoadDatasetService {
         const answers = [];
         for (let i = 0, length = this.columns.length; i < length; i++) {
             const col = this.json.indicators[this.columns[i]];
+            const weight = data[this.weightColumn] && data[this.weightColumn] !== '' ? data[this.weightColumn] : 0;
             answers.push({
                 rowId,
                 year: this.year,
@@ -62,7 +63,7 @@ class LoadDatasetService {
                 answerId: col.answerId,
                 indicatorId: col.indicatorId,
                 country4yearId: this.country4yearId,
-                weight: parseFloat(data[this.weightColumn]),
+                weight: parseFloat(weight),
                 value: data[this.columns[i]] ? data[this.columns[i]].trim() : ''
             });
         }
