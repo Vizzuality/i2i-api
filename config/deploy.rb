@@ -44,3 +44,8 @@ set :keep_releases, 2
 # RVM
 # set :rvm_ruby_version, '2.2.1'
 set :rvm_custom_path, '/usr/share/rvm'
+
+namespace :deploy do
+  after :finishing, 'deploy:cleanup'
+  after 'deploy:publishing', 'deploy:restart'
+end
