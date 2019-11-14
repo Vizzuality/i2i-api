@@ -25,5 +25,6 @@
     "mobile_money": "Mobile Money",
     "asset_strand": "Assets type",
     "total_asset_strand": "Asset status",
-    "sdgs_strand": "Sustainable development goals"
+    "sdgs_strand": "Sustainable development goals",
+    "water_source_type": "Water source type"
 }
