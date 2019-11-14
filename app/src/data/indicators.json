@@ -16,5 +16,15 @@
     "total_saving_strand": "Saving Strands",
     "total_remittances_strand": "Remittances Strands",
     "total_insurance_strand": "Insurance Strands",
-    "total_credit_strand": "Credit Strands"
+    "total_credit_strand": "Credit Strands",
+    "toilet_type": "Sanitation type",
+    "cooking_energy_type": "Cooking energy source",
+    "electricity_access_type": "Electricity access",
+    "usd_per_day": "USD per day",
+    "poverty_line": "Poverty line",
+    "mobile_money": "Mobile Money",
+    "asset_strand": "Assets type",
+    "total_asset_strand": "Asset status",
+    "sdgs_strand": "Sustainable development goals",
+    "water_source_type": "Water source type"
 }
