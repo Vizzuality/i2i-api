@@ -177,8 +177,8 @@ National Surveys endpoint
 bundle exec cap [staging|production] deploy
 ```
 
-SMME Endpoints
+MSME Endpoints
 
 ```
-bundle exec cap [smme-staging|smme-production] deploy
+bundle exec cap [msme-staging|msme-production] deploy
 ```
