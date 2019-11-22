@@ -8,7 +8,6 @@ const mount = require('koa-mount');
 module.exports = (function () {
 
     const loadAPI = function (app, path, pathApi) {
-        console.log(path, pathApi)
         const routesFiles = fs.readdirSync(path);
         let existIndexRouter = false;
         routesFiles.forEach((file) => {

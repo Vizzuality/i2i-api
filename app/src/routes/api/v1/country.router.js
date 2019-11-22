@@ -201,6 +201,9 @@ class CountryRouter {
         if (ctx.request.body.total) {
             updateObj.total = ctx.request.body.total;
         }
+        if (ctx.request.body.totalMSME) {
+            updateObj.totalMSME = ctx.request.body.totalMSME;
+        }
         if (ctx.request.body.dataUrl) {
             updateObj.dataUrl = ctx.request.body.dataUrl;
         }
