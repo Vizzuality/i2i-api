@@ -121,7 +121,7 @@ class CountryRouter {
             countryId: exists.id,
             year: ctx.request.body.year,
             total: ctx.request.body.total,
-            totalMSME: ctx.request.body.totalMSME,
+            total_msme: ctx.request.body.total_msme,
             dataUrl: ctx.request.body.dataUrl
         });
         const data = await CountryModel.findAll({
@@ -201,8 +201,8 @@ class CountryRouter {
         if (ctx.request.body.total) {
             updateObj.total = ctx.request.body.total;
         }
-        if (ctx.request.body.totalMSME) {
-            updateObj.totalMSME = ctx.request.body.totalMSME;
+        if (ctx.request.body.total_msme) {
+            updateObj.total_msme = ctx.request.body.total_msme;
         }
         if (ctx.request.body.dataUrl) {
             updateObj.dataUrl = ctx.request.body.dataUrl;
