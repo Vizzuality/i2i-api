@@ -8,11 +8,13 @@ const mount = require('koa-mount');
 module.exports = (function () {
 
     const loadAPI = function (app, path, pathApi) {
+        console.log(path, pathApi)
         const routesFiles = fs.readdirSync(path);
         let existIndexRouter = false;
         routesFiles.forEach((file) => {
             const newPath = path ? (`${path}/${file}`) : file;
             const stat = fs.statSync(newPath);
+            
             if (!stat.isDirectory()) {
                 if (file.lastIndexOf('.router.js') !== -1) {
                     if (file === 'index.router.js') {
@@ -21,6 +23,8 @@ module.exports = (function () {
                         logger.debug('Loading route %s, in path %s', newPath, pathApi);
                         if (pathApi) {
                             app.use(mount(pathApi, require(newPath).middleware()));
+                            // Forcing to create routes for msme, even when folder doesn't exist
+                            app.use(mount('/msme-api/v1', require(newPath).middleware()));
                         } else {
                             app.use(require(newPath).middleware());
                         }

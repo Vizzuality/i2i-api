@@ -167,3 +167,18 @@ GET: /api/v1/indicator/:indicatorId/expanded/download -> Download csv with the d
 GET: /api/v1/indicator/:country/:year -> Return the statistics for all indicators of the poll selected with country and year
 
 GET: /api/v1/indicator -> Returns all indicators ids.
+
+
+## How to deploy
+
+National Surveys endpoint
+
+```
+bundle exec cap [staging|production] deploy
+```
+
+MSME Endpoints
+
+```
+bundle exec cap [msme-staging|msme-production] deploy
+```
