@@ -121,6 +121,7 @@ class CountryRouter {
             countryId: exists.id,
             year: ctx.request.body.year,
             total: ctx.request.body.total,
+            totalMSME: ctx.request.body.totalMSME,
             dataUrl: ctx.request.body.dataUrl
         });
         const data = await CountryModel.findAll({
