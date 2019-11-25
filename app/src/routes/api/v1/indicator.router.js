@@ -1,7 +1,8 @@
+const path = require('path');
 const Router = require('koa-router');
 const config = require('config');
 const indicatorService = require('services/indicator.service');
-const indicators = require(process.env.INDICATORS_PATH);
+const indicators = require(path.resolve(process.cwd(), process.env.INDICATORS_PATH));
 const logger = require('logger');
 const json2csv = require('json2csv');
 const passThrough = require('stream').PassThrough;
