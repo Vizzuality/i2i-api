@@ -8,6 +8,10 @@ module.exports = function (sequelize, DataTypes) {
         year: {
             type: DataTypes.INTEGER
         },
+        total_msme: {
+            type: DataTypes.DOUBLE,
+            allowNull: true
+        },
         total: {
             type: DataTypes.DOUBLE,
             allowNull: true
