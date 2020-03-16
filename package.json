@@ -55,7 +55,7 @@
     "koa-router": "^7.0.1",
     "koa-validate": "^1.0.7",
     "memory-cache": "^0.1.6",
-    "minimist": "^1.2.0",
+    "minimist": "^1.2.2",
     "pg": "^6.1.2",
     "pg-hstore": "^2.3.2",
     "request": "^2.79.0",
