@@ -42,17 +42,19 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         }
     }, {
-        classMethods: {
-            associate: (models) => {
-                answer.belongsTo(models.country4year, {
-                    onDelete: 'CASCADE',
-                    foreignKey: {
-                        allowNull: false
-                    }
-                });
+            underscored: true,
+            classMethods: {
+                associate: (models) => {
+                    answer.belongsTo(models.country4year, {
+                        onDelete: 'CASCADE',
+                        foreignKey: {
+                            name: 'country_4_year_id',
+                            allowNull: false
+                        }
+                    });
+                }
             }
-        }
-    });
+        });
 
     return answer;
 };

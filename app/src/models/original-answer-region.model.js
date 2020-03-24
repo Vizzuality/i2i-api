@@ -18,18 +18,20 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         }
     }, {
-        tableName: 'original_answer_region',
-        classMethods: {
-            associate: (models) => {
-                originalAnswer.belongsTo(models.region4year, {
-                    onDelete: 'CASCADE',
-                    foreignKey: {
-                        allowNull: false
-                    }
-                });
+            underscored: true,
+            tableName: 'original_answer_region',
+            classMethods: {
+                associate: (models) => {
+                    originalAnswer.belongsTo(models.region4year, {
+                        onDelete: 'CASCADE',
+                        foreignKey: {
+                            name: 'region_4_year_id',
+                            allowNull: false
+                        }
+                    });
+                }
             }
-        }
-    });
+        });
 
     return originalAnswer;
 };

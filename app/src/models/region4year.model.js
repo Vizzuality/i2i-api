@@ -17,19 +17,21 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true
         }
     }, {
-        classMethods: {
-            associate: (models) => {
-                region4year.belongsTo(models.region, {
-                    onDelete: 'CASCADE',
-                    foreignKey: {
-                        allowNull: false
-                    }
-                });
-                region4year.hasMany(models.answerRegion);
-                region4year.hasMany(models.originalAnswerRegion);
+            underscored: true,
+            classMethods: {
+                associate: (models) => {
+                    region4year.belongsTo(models.region, {
+                        onDelete: 'CASCADE',
+                        foreignKey: {
+                            name: 'region_id',
+                            allowNull: false
+                        }
+                    });
+                    region4year.hasMany(models.answerRegion);
+                    region4year.hasMany(models.originalAnswerRegion);
+                }
             }
-        }
-    });
+        });
 
     return region4year;
 };
