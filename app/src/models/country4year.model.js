@@ -22,8 +22,8 @@ module.exports = function (sequelize, DataTypes) {
             field: 'data_url'
         }
     }, {
-            tableName: 'country_4_years',
             underscored: true,
+            tableName: 'country_4_years',
             classMethods: {
                 associate: (models) => {
                     country4year.belongsTo(models.country, {

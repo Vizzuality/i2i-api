@@ -14,10 +14,12 @@ module.exports = (sequelize, DataTypes) => {
         },
         dataUrl: {
             type: DataTypes.STRING,
-            allowNull: true
+            allowNull: true,
+            field: 'data_url'
         }
     }, {
             underscored: true,
+            tableName: 'region_4_years',
             classMethods: {
                 associate: (models) => {
                     region4year.belongsTo(models.region, {

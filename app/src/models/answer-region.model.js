@@ -42,8 +42,8 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         }
     }, {
-            tableName: 'answer_region',
             underscored: true,
+            tableName: 'answer_regions',
             classMethods: {
                 associate: (models) => {
                     answer.belongsTo(models.region4year, {

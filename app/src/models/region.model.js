@@ -22,9 +22,13 @@ module.exports = (sequelize, DataTypes) => {
         }
     }, {
             underscored: true,
+            tableName: 'regions',
             classMethods: {
                 associate: (models) => {
-                    region.hasMany(models.region4year);
+                    region.hasMany(
+                        models.region4year,
+                        { foreignKey: 'region_id' }
+                    );
                 }
             }
         });

@@ -22,6 +22,7 @@ module.exports = function (sequelize, DataTypes) {
         }
     }, {
             underscored: true,
+            tableName: 'countries',
             classMethods: {
                 associate: (models) => {
                     country.hasMany(models.country4year);
