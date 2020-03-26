@@ -42,18 +42,21 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         }
     }, {
-        tableName: 'answer_region',
-        classMethods: {
-            associate: (models) => {
-                answer.belongsTo(models.region4year, {
-                    onDelete: 'CASCADE',
-                    foreignKey: {
-                        allowNull: false
-                    }
-                });
+            underscored: true,
+            tableName: 'answer_regions',
+            classMethods: {
+                associate: (models) => {
+                    answer.belongsTo(models.region4year, {
+                        onDelete: 'CASCADE',
+                        targetKey: '',
+                        foreignKey: {
+                            name: 'region_4_year_id',
+                            allowNull: false
+                        }
+                    });
+                }
             }
-        }
-    });
+        });
 
     return answer;
 };

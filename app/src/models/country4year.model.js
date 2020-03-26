@@ -18,22 +18,26 @@ module.exports = function (sequelize, DataTypes) {
         },
         dataUrl: {
             type: DataTypes.STRING,
-            allowNull: true
+            allowNull: true,
+            field: 'data_url'
         }
     }, {
-        classMethods: {
-            associate: (models) => {
-                country4year.belongsTo(models.country, {
-                    onDelete: 'CASCADE',
-                    foreignKey: {
-                        allowNull: false
-                    }
-                });
-                country4year.hasMany(models.answer);
-                country4year.hasMany(models.originalAnswer);
+            underscored: true,
+            tableName: 'country_4_years',
+            classMethods: {
+                associate: (models) => {
+                    country4year.belongsTo(models.country, {
+                        onDelete: 'CASCADE',
+                        foreignKey: {
+                            name: 'country_id',
+                            allowNull: false
+                        }
+                    });
+                    country4year.hasMany(models.answer);
+                    country4year.hasMany(models.originalAnswer);
+                }
             }
-        }
-    });
+        });
 
     return country4year;
 };
