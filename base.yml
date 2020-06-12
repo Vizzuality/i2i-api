@@ -1,9 +1,0 @@
-base:
-  build: .
-  ports:
-    - "4000:3000"
-  container_name: i2i-api
-  environment:
-    PORT: 3000
-    NODE_PATH: app/src
-

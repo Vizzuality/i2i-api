@@ -246,6 +246,10 @@ class IndicatorService {
             resultQuery = `${withQuery} ${resultQuery}`;
         }
 
+        console.log('>>>>>>>>>');
+        console.log(resultQuery);
+        console.log('<<<<<<<<<');
+
         const result = await await sequelize.query(resultQuery);
 
 

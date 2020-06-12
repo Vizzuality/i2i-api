@@ -5,7 +5,9 @@ const basename = path.basename(module.filename);
 const config = require('config');
 const logger = require('logger');
 const db = {};
-const sequelize = new Sequelize(
+const databaseUrl = process.env.DATABASE_URL;
+
+const sequelize = databaseUrl ? new Sequelize(databaseUrl) : Sequelize(
     config.get('database.database'),
     config.get('database.user'),
     config.get('database.password'), {

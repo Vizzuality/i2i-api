@@ -1,24 +1,9 @@
-develop:
-  extends:
-    file: base.yml
-    service: base
-  ports:
-    - "35739:35729"
-  command: develop
-  volumes:
-    - ./app:/opt/i2i/app
-  links: 
-    - postgres
-  environment:
-    AUTH_USERNAME: admin
-    AUTH_PASSWORD: admin
-postgres:
-  image: postgres:9.6
-  container_name: i2i-api-postgres
-  environment: 
-    POSTGRES_PASSWORD: root
-    POSTGRES_USER: root
-    POSTGRES_DB: i2i
-  volumes:
-    - ./database:/var/lib/postgresql/data
-
+version: '3'
+services:
+  api:
+    container_name: i2i-api-dev
+    command: develop
+    volumes:
+      - ./app:/opt/i2i/app
+volumes:
+  postgres-data:
