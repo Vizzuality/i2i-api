@@ -182,3 +182,9 @@ MSME Endpoints
 ```
 bundle exec cap [msme-staging|msme-production] deploy
 ```
+
+Mobile Surveys Endpoints
+
+```
+bundle exec cap [ms-staging|ms-production] deploy
+```
