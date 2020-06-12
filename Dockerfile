@@ -1,5 +1,5 @@
 FROM mhart/alpine-node:7.2
-MAINTAINER raul.requero@vizzuality.com
+LABEL maintainer="hello@vizzuality.com"
 
 ENV NAME i2i
 ENV USER i2i
