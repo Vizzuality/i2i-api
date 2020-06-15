@@ -6,7 +6,7 @@ ENV USER i2i
 
 RUN apk update && apk upgrade && \
     apk add --no-cache --update \
-    bash python
+    bash python make
 
 RUN addgroup $USER && adduser -s /bin/bash -D -G $USER $USER
 
