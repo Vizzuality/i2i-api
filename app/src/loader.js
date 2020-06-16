@@ -22,9 +22,6 @@ module.exports = (function () {
                         logger.debug('Loading route %s, in path %s', newPath, pathApi);
                         if (pathApi) {
                             app.use(mount(pathApi, require(newPath).middleware()));
-                            // Forcing to create routes for msme, even when folder doesn't exist
-                            app.use(mount('/msme-api/v1', require(newPath).middleware()));
-                            app.use(mount('/ms-api/v1', require(newPath).middleware()));
                         } else {
                             app.use(require(newPath).middleware());
                         }

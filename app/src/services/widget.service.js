@@ -7,11 +7,10 @@ const CountryModel = require('models').country;
 const RegionModel = require('models').region;
 const sequelize = require('models').sequelize;
 
-
-class IndicatorService {
+class WidgetService {
 
     async getIndicatorsByCountryAndYear(iso, year) {
-        const total = await IndicatorService.getTotal(iso, year);
+        const total = await WidgetService.getTotal(iso, year);
         const result = await AnswerModel.findAll({
             raw: true,
             attributes: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value', sequelize.fn('SUM', sequelize.col('weight')), sequelize.fn('COUNT', sequelize.col('id'))],
@@ -30,7 +29,7 @@ class IndicatorService {
     }
 
     async getIndicatorsByRegionAndYear(iso, year) {
-        const total = await IndicatorService.getTotal(iso, year);
+        const total = await WidgetService.getTotal(iso, year);
         const result = await AnswerRegionModel.findAll({
             raw: true,
             attributes: ['iso', 'year', 'indicatorId', 'childIndicatorId', 'answerId', 'value', sequelize.fn('SUM', sequelize.col('weight')), sequelize.fn('COUNT', sequelize.col('id'))],
@@ -128,7 +127,7 @@ class IndicatorService {
         };
         if (filter) {
             logger.debug('Filter by indicatorid', filter);
-            const query = IndicatorService.getQueryRowIds(JSON.parse(filter));
+            const query = WidgetService.getQueryRowIds(JSON.parse(filter));
             where.row_id = {
                 $in: sequelize.literal(`( ${query} )`)
             };
@@ -164,7 +163,7 @@ class IndicatorService {
         let withQuery = '';
         if (filter) {
             logger.debug('Filter by ', filter);
-            withQuery = `with p as (${IndicatorService.getQueryRowIds(JSON.parse(filter))})`;
+            withQuery = `with p as (${WidgetService.getQueryRowIds(JSON.parse(filter))})`;
             where.row_id = {
                 $in: sequelize.literal(`(select row_id from p)`)
             };
@@ -209,6 +208,11 @@ class IndicatorService {
 
     async getIndicator(indicatorId, isos, filter) {
         logger.info('Get indicators');
+
+        logger.debug('INDICATOR ID ', indicatorId);
+        logger.debug('ISOS ', isos);
+        logger.debug('FILTER PARAM ', filter);
+
         const totals = {};
         let where = {
             indicator_id: indicatorId
@@ -216,7 +220,7 @@ class IndicatorService {
         let withQuery = '';
         if (filter) {
             logger.debug('Filter by ', filter);
-            withQuery = `with p as (${IndicatorService.getQueryRowIds(JSON.parse(filter))})`;
+            withQuery = `with p as (${WidgetService.getQueryRowIds(JSON.parse(filter))})`;
             where.row_id = {
                 $in: sequelize.literal(`(select row_id from p)`)
             };
@@ -284,4 +288,4 @@ class IndicatorService {
 
 }
 
-module.exports = new IndicatorService();
+module.exports = new WidgetService();
