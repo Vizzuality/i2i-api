@@ -19,11 +19,20 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: true,
             field: 'map_url'
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+            field: 'created_at'
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            field: 'updated_at'
         }
     }, {
+        timestamps: false,
         classMethods: {
             associate: (models) => {
-                country.hasMany(models.country4year);
+                country.hasMany(models.country_4_year);
             }
         }
     });

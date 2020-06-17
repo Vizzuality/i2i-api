@@ -1,5 +1,5 @@
-module.exports = function (sequelize, DataTypes) {
-    const country4year = sequelize.define('country4year', {
+module.exports = (sequelize, DataTypes) => {
+    const region4year = sequelize.define('region_4_year', {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
@@ -8,32 +8,38 @@ module.exports = function (sequelize, DataTypes) {
         year: {
             type: DataTypes.INTEGER
         },
-        total_msme: {
-            type: DataTypes.DOUBLE,
-            allowNull: true
-        },
         total: {
             type: DataTypes.DOUBLE,
             allowNull: true
         },
         dataUrl: {
             type: DataTypes.STRING,
-            allowNull: true
+            allowNull: true,
+            field: 'data_url'
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+            field: 'created_at'
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            field: 'updated_at'
         }
     }, {
+        timestamps: false,
         classMethods: {
             associate: (models) => {
-                country4year.belongsTo(models.country, {
+                region4year.belongsTo(models.region, {
                     onDelete: 'CASCADE',
                     foreignKey: {
                         allowNull: false
                     }
                 });
-                country4year.hasMany(models.answer);
-                country4year.hasMany(models.originalAnswer);
+                region4year.hasMany(models.answer_region);
+                region4year.hasMany(models.original_answer_region);
             }
         }
     });
 
-    return country4year;
+    return region4year;
 };

@@ -12,7 +12,7 @@ module.exports = (grunt) => {
                     script: 'app/index.js',
                     opts: ['--harmony'],
                     node_env: 'dev',
-                    port: process.env.PORT,
+                    port: process.env.PORT || 3000,
                     output: 'started'
                 }
             }

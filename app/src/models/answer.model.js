@@ -40,11 +40,20 @@ module.exports = (sequelize, DataTypes) => {
         year: {
             type: DataTypes.INTEGER,
             allowNull: false
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+            field: 'created_at'
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            field: 'updated_at'
         }
     }, {
+        timestamps: false,
         classMethods: {
             associate: (models) => {
-                answer.belongsTo(models.country4year, {
+                answer.belongsTo(models.country_4_year, {
                     onDelete: 'CASCADE',
                     foreignKey: {
                         allowNull: false
