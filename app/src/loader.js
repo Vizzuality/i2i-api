@@ -22,7 +22,6 @@ module.exports = (function () {
             logger.debug('Loading route %s, in path %s', newPath, pathApi);
             if (pathApi) {
               app.use(mount(pathApi, require(newPath).middleware()));
-              app.use(mount('/ms-api/v2', require(newPath).middleware()));
             } else {
               app.use(require(newPath).middleware());
             }
