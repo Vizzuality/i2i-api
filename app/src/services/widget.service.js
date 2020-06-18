@@ -55,7 +55,7 @@ class WidgetService {
         and year = ${year}
         and ${indicatorId} != ''
       group by gender,
-        fas_strand,
+        ${indicatorId},
         iso,
         year,
         total
