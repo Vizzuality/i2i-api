@@ -7,4 +7,4 @@ set :ssh_options, {
 
 set :deploy_to, '/var/www/i2i-smme'
 set :node_env, 'production'
-set :branch, 'staging'
+set :branch, 'feature/mobile-surveys-endpoint'
