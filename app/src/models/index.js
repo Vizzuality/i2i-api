@@ -7,7 +7,7 @@ const logger = require('logger');
 const db = {};
 const databaseUrl = process.env.DATABASE_URL;
 
-const sequelize = databaseUrl ? new Sequelize(databaseUrl) : Sequelize(
+const sequelize = databaseUrl ? new Sequelize(databaseUrl) : new Sequelize(
     config.get('database.database'),
     config.get('database.user'),
     config.get('database.password'), {
