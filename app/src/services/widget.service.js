@@ -8,15 +8,13 @@ const sequelize = require('models').sequelize;
 
 class WidgetService {
 
-  // eslint-disable-next-line no-unused-vars
-  async getWidget(indicatorId, isos, filter) {
+  async getWidget(indicatorId, isos, analyzeIndicator) {
     logger.info('Get widget agregated by gender');
 
     if (!isos || isos.length === 0) return null;
 
     const { iso, year } = isos[0];
-
-    const result = await sequelize.query(`
+    const query = `
       with a as
       (
         select * 
@@ -31,10 +29,12 @@ class WidgetService {
         where indicator_id = '${indicatorId}'
       )
       ,
+      ${analyzeIndicator ? `c as (select * from answers where indicator_id = '${analyzeIndicator}'),` : ''}
       result as 
       (
         select a.value as gender,
           b.value as ${indicatorId},
+          ${analyzeIndicator ? `c.value as ${analyzeIndicator},` : ''}
           a.weight,
           b.iso,
           b.year,
@@ -42,10 +42,12 @@ class WidgetService {
         from a 
         inner join b 
           on a.row_id = b.row_id
-        group by a.weight, a.value, b.value, b.iso, b.year
+          ${analyzeIndicator ? `inner join c on a.row_id = c.row_id` : ''}
+        group by a.weight, a.value, b.value, ${analyzeIndicator ? 'c.value,' : ''} b.iso, b.year
       )
       select sum(weight) as value,
         gender,
+        ${analyzeIndicator ? `${analyzeIndicator},` : ''}
         ${indicatorId} as category,
         iso,
         year,
@@ -55,25 +57,26 @@ class WidgetService {
         and year = ${year}
         and ${indicatorId} != ''
       group by gender,
+        ${analyzeIndicator ? `${analyzeIndicator},` : ''}
         ${indicatorId},
         iso,
         year,
         total
       order by category
-    `);
+    `;
+    const result = await sequelize.query(query);
 
     return result;
   }
 
   // eslint-disable-next-line no-unused-vars
-  async getHeatmap(indicatorId, isos, filter) {
+  async getHeatmap(indicatorId, isos, analyzeIndicator) {
     logger.info('Get widget agregated by gender and age');
 
     if (!isos || isos.length === 0) return null;
 
     const { iso, year } = isos[0];
-
-    const result = await sequelize.query(`
+    const query = `
       with a as
       (
         select * 
@@ -92,13 +95,13 @@ class WidgetService {
       (
         select * 
         from answers 
-        where indicator_id = 'age'
+        where indicator_id = '${analyzeIndicator || 'age'}'
       )
       ,
       result as 
       (
         select a.value as gender,
-          c.value as age,
+          c.value as ${analyzeIndicator || 'age'},
           b.value as ${indicatorId},
           a.weight,
           b.iso,
@@ -113,7 +116,7 @@ class WidgetService {
       )
       select sum(weight) as value,
         gender,
-        age,
+        ${analyzeIndicator || 'age'},
         ${indicatorId} as category,
         iso,
         year,
@@ -123,13 +126,14 @@ class WidgetService {
         and year = ${year}
         and ${indicatorId} != ''
       group by gender,
-        age,
+        ${analyzeIndicator || 'age'},
         ${indicatorId},
         iso,
         year,
         total
       order by category
-    `);
+    `;
+    const result = await sequelize.query();
 
     return result;
   }
