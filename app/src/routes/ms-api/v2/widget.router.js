@@ -11,7 +11,7 @@ const router = new Router({
 
 class WidgetRouter {
 
-  static async getIndicator(ctx) {
+  static async getWidget(ctx) {
     const isos = Object.keys(ctx.query);
     const isoFilter = [];
 
@@ -24,7 +24,28 @@ class WidgetRouter {
       }
     }
 
-    const result = await widgetService.getIndicator(ctx.params.indicatorId, isoFilter, ctx.query.filters);
+    const result = await widgetService.getWidget(ctx.params.indicatorId, isoFilter, ctx.query.filters);
+
+    ctx.body = {
+      data: result,
+      title: indicators[ctx.params.indicatorId]
+    };
+  }
+
+  static async getHeatmap(ctx) {
+    const isos = Object.keys(ctx.query);
+    const isoFilter = [];
+
+    for (let i = 0, length = isos.length; i < length; i++) {
+      if (isos[i] !== 'filters') {
+        isoFilter.push({
+          iso: isos[i],
+          year: parseInt(ctx.query[isos[i]], 10)
+        });
+      }
+    }
+
+    const result = await widgetService.getHeatmap(ctx.params.indicatorId, isoFilter, ctx.query.filters);
 
     ctx.body = {
       data: result,
@@ -44,7 +65,8 @@ const cached = async (ctx, next) => {
   await next();
 };
 
-router.get('/:indicatorId', cached, WidgetRouter.getIndicator);
+router.get('/:indicatorId', cached, WidgetRouter.getWidget);
+router.get('/:indicatorId/heatmap', cached, WidgetRouter.getHeatmap);
 
 
 module.exports = router;
