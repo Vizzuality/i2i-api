@@ -23,8 +23,8 @@ class WidgetService {
     }
     if (filtersParams && filtersParams.length) {
       filtersParams.forEach((f) => {
-        if (f.indicatorId === indicatorId) {
-          const ind = items.find((i) => i.indicatorId === indicatorId);
+        const ind = items.find((i) => i.indicatorId === indicatorId);
+        if (ind) {
           ind.value = f.value;
         } else {
           items.push(f);
@@ -106,7 +106,14 @@ class WidgetService {
     }
 
     if (filtersParams && filtersParams.length) {
-      filtersParams.forEach((f) => items.push(f));
+      filtersParams.forEach((f) => {
+        const ind = items.find((i) => i.indicatorId === indicatorId);
+        if (ind) {
+          ind.value = f.value;
+        } else {
+          items.push(f);
+        }
+      });
     }
 
     const withQuery = items.map(({ indicatorId, value }) => {
