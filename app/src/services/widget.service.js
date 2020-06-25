@@ -26,8 +26,9 @@ class WidgetService {
         if (f.indicatorId === indicatorId) {
           const ind = items.find((i) => i.indicatorId === indicatorId);
           ind.value = f.value;
+        } else {
+          items.push(f);
         }
-        items.push(f);
       });
     }
 
