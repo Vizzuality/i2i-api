@@ -23,7 +23,7 @@ class WidgetService {
     }
     if (filtersParams && filtersParams.length) {
       filtersParams.forEach((f) => {
-        const ind = items.find((i) => i.indicatorId === indicatorId);
+        const ind = items.find((i) => i.indicatorId === f.indicatorId);
         if (ind) {
           ind.value = f.value;
         } else {
@@ -107,7 +107,7 @@ class WidgetService {
 
     if (filtersParams && filtersParams.length) {
       filtersParams.forEach((f) => {
-        const ind = items.find((i) => i.indicatorId === indicatorId);
+        const ind = items.find((i) => i.indicatorId === f.indicatorId);
         if (ind) {
           ind.value = f.value;
         } else {
