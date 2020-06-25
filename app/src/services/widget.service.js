@@ -22,7 +22,13 @@ class WidgetService {
       items.push({ indicatorId: analyzeIndicator });
     }
     if (filtersParams && filtersParams.length) {
-      filtersParams.forEach((f) => items.push(f));
+      filtersParams.forEach((f) => {
+        if (f.indicatorId === indicatorId) {
+          const ind = items.find((i) => i.indicatorId === indicatorId);
+          ind.value = f.value;
+        }
+        items.push(f);
+      });
     }
 
     const withQuery = items.map(({ indicatorId, value }) => {
