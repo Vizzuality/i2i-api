@@ -24,7 +24,7 @@ class WidgetRouter {
       }
     }
 
-    const result = await widgetService.getWidget(ctx.params.indicatorId, isoFilter, ctx.query.analyze);
+    const result = await widgetService.getWidget(ctx.params.indicatorId, isoFilter, ctx.query.analyze, ctx.query.filters);
 
     ctx.body = {
       data: result,
@@ -45,7 +45,7 @@ class WidgetRouter {
       }
     }
 
-    const result = await widgetService.getHeatmap(ctx.params.indicatorId, isoFilter, ctx.query.analyze);
+    const result = await widgetService.getHeatmap(ctx.params.indicatorId, isoFilter, ctx.query.analyze, ctx.query.filters);
 
     ctx.body = {
       data: result,

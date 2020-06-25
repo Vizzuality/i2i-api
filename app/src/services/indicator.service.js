@@ -7,7 +7,6 @@ const CountryModel = require('models').country;
 const RegionModel = require('models').region;
 const sequelize = require('models').sequelize;
 
-
 class IndicatorService {
 
   async getIndicatorsByCountryAndYear(iso, year) {
@@ -260,7 +259,7 @@ class IndicatorService {
 
     const totalQuery = await sequelize.query(`
             ${withQuery}
-            select t.iso as iso, t.year as year, sum( t.weight) as sum 
+            select t.iso as iso, t.year as year, sum( t.weight) as sum
             from (
                 ${innerQuery}
             ) as t
