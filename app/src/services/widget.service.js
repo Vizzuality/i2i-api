@@ -4,32 +4,6 @@ const sequelize = require('models').sequelize;
 /**
 * Data sample
 * [{"category":"rural","position":"female","value":71}]
-* Query:
-  with a as (
-    select *
-    from answers
-    where indicator_id = 'gender'
-  ),
-  b as (
-    select *
-    from answers
-    where indicator_id in ('age', 'bank', 'children_decission', 'earning_freq')
-      and value in ('55+','Unbanked', 'We do not talk about it', 'Daily','I dont work')
-      and iso = 'KEN'
-      and year = 2020
-  ),
-  c as (
-    select b.year, b.iso, b.indicator_id, b.value as category, a.value as gender,
-      b.weight, sum(b.weight) over() as total
-    from a
-    inner join b on a.row_id = b.row_id
-    group by b.indicator_id, b.value, a.value, b.weight, b.year, b.iso
-  )
-  select c.year, c.iso, c.indicator_id as indicator, c.category, c.gender,
-    sum(c.weight) as value,
-    (sum(weight) * 100 / total) as percentage
-  from c
-  group by c.indicator_id, c.category, c.gender, c.total, c.year, c.iso
 */
 
 class WidgetService {
@@ -39,69 +13,66 @@ class WidgetService {
 
     if (!isos || isos.length === 0) return null;
 
-    // const filtersParams = JSON.parse(filters);
-    // const filterIndicatorsSQL = filtersParams.map(({ indicatorId }) => (
-    //   `and indicator_id = '${indicatorId}'`
-    // )).join(' ');
-    // const filterValuesSQL = filtersParams.map(({ value }) => (
-    //   `'${value}'`
-    // )).join(', ');
-    // const filtersSQL = filtersParams.map(({ indicatorId, value }) => (
-    //   ` and ${indicatorId} IN ('${value[0]}')`
-    // )).join('');
-
-    // logger.debug('FILTERS PARAM', filterValuesSQL);
-
     const { iso, year } = isos[0];
+
+    // By default this endpoint should be aggregated by gender indicator
+    const items = [{ indicatorId: 'gender' }, { indicatorId }];
+    const filtersParams = filters && JSON.parse(filters);
+    if (analyzeIndicator) {
+      items.push({ indicatorId: analyzeIndicator });
+    }
+    if (filtersParams && filtersParams.length) {
+      filtersParams.forEach((f) => items.push(f));
+    }
+
+    const withQuery = items.map(({ indicatorId, value }) => {
+      if (value) {
+        const valuesQuery = value.join('\', \'');
+        return `${indicatorId} as (
+          select * from answers where indicator_id = '${indicatorId}' and value in ('${valuesQuery}')
+        )`;
+      }
+      return `${indicatorId} as (select * from answers where indicator_id = '${indicatorId}')`;
+    }).join(', ');
+    const selectQuery = items.map(({ indicatorId }) => (`${indicatorId}.value as ${indicatorId}`)).join(', ');
+    const mainTable = items[0].indicatorId;
+    const joinQuery = items
+      .slice(1, items.length)
+      .map(({ indicatorId }) => (`inner join ${indicatorId} on ${mainTable}.row_id = ${indicatorId}.row_id`))
+      .join(' ');
+    const groupByQuery = items.map(({ indicatorId }) => (`${indicatorId}.value`)).join(', ');
+    const indicators = items.map(({ indicatorId }) => indicatorId).join(', ');
+
     const query = `
-      with a as
-      (
-        select *
-        from answers
-        where indicator_id = 'gender'
+      with ${withQuery},
+      result as (
+        select ${selectQuery},
+          ${mainTable}.weight,
+          ${mainTable}.iso,
+          ${mainTable}.year,
+          sum(${mainTable}.weight) over() as total
+        from ${mainTable}
+        ${joinQuery}
+        group by ${groupByQuery},
+          ${mainTable}.weight,
+          ${mainTable}.iso,
+          ${mainTable}.year
+      ),
+      calculations as (
+        select ${indicators},
+          iso,
+          year,
+          sum(weight) as value,
+          (sum(weight) * 100 / total) as percentage
+        from result
+        where iso = '${iso}'
+          and year = ${year}
+        group by ${indicators},
+          iso,
+          year,
+          total
       )
-      ,
-      b as
-      (
-        select *
-        from answers
-        where indicator_id = '${indicatorId}'
-      )
-      ,
-      ${analyzeIndicator ? `c as (select * from answers where indicator_id = '${analyzeIndicator}'),` : ''}
-      result as
-      (
-        select a.value as gender,
-          b.value as ${indicatorId},
-          ${analyzeIndicator ? `c.value as ${analyzeIndicator},` : ''}
-          a.weight,
-          b.iso,
-          b.year,
-          sum(a.weight) over() as total
-        from a
-        inner join b
-          on a.row_id = b.row_id
-          ${analyzeIndicator ? `inner join c on a.row_id = c.row_id` : ''}
-        group by a.weight, a.value, b.value, ${analyzeIndicator ? 'c.value,' : ''} b.iso, b.year
-      )
-      select sum(weight) as value,
-        gender,
-        ${analyzeIndicator ? `${analyzeIndicator},` : ''}
-        ${indicatorId} as category,
-        iso,
-        year,
-        (sum(weight) * 100 / total) as percentage
-      from result
-      where iso = '${iso}'
-        and year = ${year}
-        and ${indicatorId} != ''
-      group by gender,
-        ${analyzeIndicator ? `${analyzeIndicator},` : ''}
-        ${indicatorId},
-        iso,
-        year,
-        total
-      order by category
+      select * from calculations
     `;
     const result = await sequelize.query(query);
 
@@ -109,68 +80,76 @@ class WidgetService {
   }
 
   // eslint-disable-next-line no-unused-vars
-  async getHeatmap(indicatorId, isos, analyzeIndicator) {
+  async getHeatmap(indicatorId, isos, analyzeIndicator, filters) {
     logger.info('Get widget agregated by gender and age');
 
     if (!isos || isos.length === 0) return null;
 
     const { iso, year } = isos[0];
+
+    // By default this endpoint should be aggregated by gender indicator
+    const items = [{ indicatorId: 'gender' }, { indicatorId }];
+    const filtersParams = filters && JSON.parse(filters);
+
+    // If there is not a analyze indicator active it will be aggregated by age
+    if (analyzeIndicator) {
+      items.push({ indicatorId: analyzeIndicator });
+    } else {
+      items.push({ indicatorId: 'age' });
+    }
+
+    if (filtersParams && filtersParams.length) {
+      filtersParams.forEach((f) => items.push(f));
+    }
+
+    const withQuery = items.map(({ indicatorId, value }) => {
+      if (value) {
+        const valuesQuery = value.join('\', \'');
+        return `${indicatorId} as (
+          select * from answers where indicator_id = '${indicatorId}' and value in ('${valuesQuery}')
+        )`;
+      }
+      return `${indicatorId} as (select * from answers where indicator_id = '${indicatorId}')`;
+    }).join(', ');
+    const selectQuery = items.map(({ indicatorId }) => (`${indicatorId}.value as ${indicatorId}`)).join(', ');
+    const mainTable = items[0].indicatorId;
+    const joinQuery = items
+      .slice(1, items.length)
+      .map(({ indicatorId }) => (`inner join ${indicatorId} on ${mainTable}.row_id = ${indicatorId}.row_id`))
+      .join(' ');
+    const groupByQuery = items.map(({ indicatorId }) => (`${indicatorId}.value`)).join(', ');
+    const indicators = items.map(({ indicatorId }) => indicatorId).join(', ');
+
     const query = `
-      with a as
-      (
-        select *
-        from answers
-        where indicator_id = 'gender'
+      with ${withQuery},
+      result as (
+        select ${selectQuery},
+          ${mainTable}.weight,
+          ${mainTable}.iso,
+          ${mainTable}.year,
+          sum(${mainTable}.weight) over() as total
+        from ${mainTable}
+        ${joinQuery}
+        group by ${groupByQuery},
+          ${mainTable}.weight,
+          ${mainTable}.iso,
+          ${mainTable}.year
+      ),
+      calculations as (
+        select ${indicators},
+          iso,
+          year,
+          sum(weight) as value,
+          (sum(weight) * 100 / total) as percentage
+        from result
+        where iso = '${iso}'
+          and year = ${year}
+        group by ${indicators},
+          iso,
+          year,
+          total
       )
-      ,
-      b as
-      (
-        select *
-        from answers
-        where indicator_id = '${indicatorId}'
-      )
-      ,
-      c as
-      (
-        select *
-        from answers
-        where indicator_id = '${analyzeIndicator || 'age'}'
-      )
-      ,
-      result as
-      (
-        select a.value as gender,
-          c.value as ${analyzeIndicator || 'age'},
-          b.value as ${indicatorId},
-          a.weight,
-          b.iso,
-          b.year,
-          sum(a.weight) over() as total
-        from a
-        inner join b
-          on a.row_id = b.row_id
-        inner join c
-          on a.row_id = c.row_id
-        group by a.weight, a.value, b.value, c.value, b.iso, b.year
-      )
-      select sum(weight) as value,
-        gender,
-        ${analyzeIndicator || 'age'},
-        ${indicatorId} as category,
-        iso,
-        year,
-        (sum(weight) * 100 / total) as percentage
-      from result
-      where iso = '${iso}'
-        and year = ${year}
-        and ${indicatorId} != ''
-      group by gender,
-        ${analyzeIndicator || 'age'},
-        ${indicatorId},
-        iso,
-        year,
-        total
-      order by category
+      select * from calculations
     `;
     const result = await sequelize.query(query);
 
