@@ -37,5 +37,9 @@
   "migrant_work":"Migrant worker identity",
   "raise_gni":"Possibility to raise 1/20 GNI (Gross National Income)",
   "freq_inconme_spouse":"Income frequency of spouse",
-  "allow_spouse_work":"Allow spouse to work"
+  "allow_spouse_work":"Allow spouse to work",
+  "region": "Province / Region",
+  "lang_literacy": "Read & write in any language",
+  "division": "Division",
+  "swahili_literacy": "Swahili literacy"
 }
