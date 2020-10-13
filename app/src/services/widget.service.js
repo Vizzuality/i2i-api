@@ -47,7 +47,6 @@ class WidgetService {
       .slice(1, items.length)
       .map(({ indicatorId }) => (`inner join ${indicatorId} on ${mainTable}.row_id = ${indicatorId}.row_id`))
       .join(' ');
-    const groupByQuery = items.map(({ indicatorId }) => (`${indicatorId}.value`)).join(', ');
     const indicators = items.map(({ indicatorId }) => indicatorId).join(', ');
 
     const query = `
@@ -60,10 +59,6 @@ class WidgetService {
           sum(${mainTable}.weight) over(partition by ${mainTable}.iso, ${mainTable}.year) as total
         from ${mainTable}
         ${joinQuery}
-        group by ${groupByQuery},
-          ${mainTable}.weight,
-          ${mainTable}.iso,
-          ${mainTable}.year
       ),
       calculations as (
         select ${indicators},
