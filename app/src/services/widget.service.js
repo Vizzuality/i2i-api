@@ -57,7 +57,7 @@ class WidgetService {
           ${mainTable}.weight,
           ${mainTable}.iso,
           ${mainTable}.year,
-          sum(${mainTable}.weight) over() as total
+          sum(${mainTable}.weight) over(partition by ${mainTable}.iso, ${mainTable}.year) as total
         from ${mainTable}
         ${joinQuery}
         group by ${groupByQuery},
