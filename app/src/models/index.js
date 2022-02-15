@@ -8,7 +8,8 @@ const db = {};
 const sequelize = new Sequelize(
     config.get('database.database'),
     config.get('database.user'),
-    config.get('database.password'), {
+    config.get('database.password'),
+    {
         host: config.get('database.host'),
         port: config.get('database.port'),
         dialect: 'postgres',
@@ -22,17 +23,20 @@ const sequelize = new Sequelize(
     }
 );
 
-
-fs
-    .readdirSync(__dirname)
-    .filter((file) => (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js'))
-    .forEach((file) => {
+fs.readdirSync(__dirname)
+    .filter(
+        file =>
+            file.indexOf('.') !== 0 &&
+            file !== basename &&
+            file.slice(-3) === '.js'
+    )
+    .forEach(file => {
         logger.debug('Loading model ', path.join(__dirname, file));
         const model = sequelize.import(path.join(__dirname, file));
         db[model.name] = model;
     });
 
-Object.keys(db).forEach((modelName) => {
+Object.keys(db).forEach(modelName => {
     if (db[modelName].associate) {
         db[modelName].associate(db);
     }

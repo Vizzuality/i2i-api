@@ -21,12 +21,17 @@ module.exports = (sequelize, DataTypes) => {
             field: 'map_url'
         }
     }, {
-        classMethods: {
-            associate: (models) => {
-                region.hasMany(models.region4year);
+            underscored: true,
+            tableName: 'regions',
+            classMethods: {
+                associate: (models) => {
+                    region.hasMany(
+                        models.region4year,
+                        { foreignKey: 'region_id' }
+                    );
+                }
             }
-        }
-    });
+        });
 
     return region;
 };

@@ -14,22 +14,26 @@ module.exports = (sequelize, DataTypes) => {
         },
         dataUrl: {
             type: DataTypes.STRING,
-            allowNull: true
+            allowNull: true,
+            field: 'data_url'
         }
     }, {
-        classMethods: {
-            associate: (models) => {
-                region4year.belongsTo(models.region, {
-                    onDelete: 'CASCADE',
-                    foreignKey: {
-                        allowNull: false
-                    }
-                });
-                region4year.hasMany(models.answerRegion);
-                region4year.hasMany(models.originalAnswerRegion);
+            underscored: true,
+            tableName: 'region_4_years',
+            classMethods: {
+                associate: (models) => {
+                    region4year.belongsTo(models.region, {
+                        onDelete: 'CASCADE',
+                        foreignKey: {
+                            name: 'region_id',
+                            allowNull: false
+                        }
+                    });
+                    region4year.hasMany(models.answerRegion);
+                    region4year.hasMany(models.originalAnswerRegion);
+                }
             }
-        }
-    });
+        });
 
     return region4year;
 };
